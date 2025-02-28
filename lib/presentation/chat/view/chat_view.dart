@@ -20,6 +20,8 @@ class ChatView extends ConsumerStatefulWidget {
   final User? otherUser;
   static const String routePath = 'chat';
 
+  
+
   @override
   ConsumerState<ChatView> createState() => _ChatViewState();
 }

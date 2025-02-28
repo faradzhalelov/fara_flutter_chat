@@ -31,8 +31,8 @@ Simple flutter chat app (Supabase && drift)
 
 ### Supabase:
     - test users: 
-        - email= test@test.com password= TestPassword=102030
-        - email= test2@test.com password= TestPassword=102030
+        - email= tester@mail.com password= Password
+        - email= tester2@mail.com password= Password
 
     - db:
 

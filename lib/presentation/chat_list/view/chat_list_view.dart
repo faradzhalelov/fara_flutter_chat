@@ -3,6 +3,7 @@
 import 'package:fara_chat/app/theme/colors.dart';
 import 'package:fara_chat/app/theme/icons.dart';
 import 'package:fara_chat/app/theme/text_styles.dart';
+import 'package:fara_chat/core/utils/extensions/database_extensions.dart';
 import 'package:fara_chat/data/database/database.dart';
 import 'package:fara_chat/presentation/chat_list/components/chat_list_item.dart';
 import 'package:fara_chat/presentation/chat_list/components/create_chat_dialog.dart';
@@ -235,7 +236,7 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
             final chat = chats[index];
             return ChatListItem(
               chatUser: chat,
-              onTap: () => context.push('/chat/${chat.$1.id}', extra:  {'otherUser' : chat.$2}),
+              onTap: () => context.push('/chat/${chat.$1.id}', extra:  {'otherUser' : chat.$2.toJson()}),
               onDismissed: (_) =>
                   _handleChatDismissed(chat, viewModel),
             );

@@ -155,19 +155,23 @@ class AppDatabaseImpl extends _$AppDatabaseImpl implements AppDatabase {
   }
   
   @override
-  Stream<List<Chat>> watchAllChats() => (select(chatsTable)
-      ..orderBy([
-        (t) => OrderingTerm(
-          expression: t.lastMessageAt,
-          mode: OrderingMode.desc,
-          nulls: NullsOrder.last,
-        ),
-        (t) => OrderingTerm(
-          expression: t.createdAt,
-          mode: OrderingMode.desc,
-        ),
-      ])
-    ).watch().map((rows) => rows.map(_mapRowToChat).toList());
+  Stream<List<Chat>> watchAllChats() => 
+  (select(chatsTable)
+    ..orderBy([
+      (t) => OrderingTerm(
+        expression: t.lastMessageAt,
+        mode: OrderingMode.desc,
+        nulls: NullsOrder.last,
+      ),
+      (t) => OrderingTerm(
+        expression: t.createdAt,
+        mode: OrderingMode.desc,
+      ),
+    ])
+  )
+  .watch()
+  .distinct()
+  .map((rows) => rows.map(_mapRowToChat).toList());
   
   @override
   Future<void> deleteChat(String chatId) async {

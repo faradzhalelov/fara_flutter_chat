@@ -47,7 +47,7 @@ final availableUsersProvider =
 
 // Provider for filtering users by search query
 final filteredUsersProvider =
-    Provider.family<List<User>, String>((ref, query) {
+    AutoDisposeProvider.family<List<User>, String>((ref, query) {
   final usersAsync = ref.watch(availableUsersProvider);
 
   return usersAsync.when(

@@ -32,6 +32,7 @@ class User {
         avatarUrl: avatarUrl ?? this.avatarUrl,
         isOnline: isOnline ?? this.isOnline,
       );
+
 }
 
 /// Chat model

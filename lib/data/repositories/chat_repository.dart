@@ -32,7 +32,7 @@ class ChatRepository {
         await _db.upsertUser(user.toUser());
       }
     } catch (e) {
-      print('Error syncing users: $e');
+      log('Error syncing users: $e');
     }
   }
 
@@ -56,7 +56,7 @@ class ChatRepository {
         await syncChatMessages(chat['id'] as  String);
       }
     } catch (e) {
-      print('Error syncing chats: $e');
+      log('Error syncing chats: $e');
     }
   }
 
@@ -75,7 +75,7 @@ class ChatRepository {
         await _db.upsertMessage(messageData.toMessage());
       }
     } catch (e) {
-      print('Error syncing messages for chat $chatId: $e');
+      log('Error syncing messages for chat $chatId: $e');
     }
   }
 
@@ -178,7 +178,7 @@ class ChatRepository {
                 username: userData['username'] as String,
                 avatarUrl: userData['avatar_url'] as String?,
                 isOnline: userData['is_online'] as bool? ?? false,
-              ))
+              ),)
           .toList();
 
       // Also save to local database

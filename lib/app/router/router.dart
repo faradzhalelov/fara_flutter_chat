@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:fara_chat/app/theme/icons.dart';
 import 'package:fara_chat/app/theme/text_styles.dart';
+import 'package:fara_chat/core/utils/extensions/database_extensions.dart';
 import 'package:fara_chat/data/database/database.dart';
 import 'package:fara_chat/presentation/auth/view/login_view.dart';
 import 'package:fara_chat/presentation/auth/view/register_view.dart';
@@ -56,13 +57,14 @@ GoRouter appRouter(Ref ref) => GoRouter(
         builder: (context, state) => const ChatListView(),
       ),
       GoRoute(
+        
         path: '/${ChatView.routePath}/:chatId',
         builder: (context, state) {
           final pathParameters = state.pathParameters;
           final extra = state.extra as Map<String, dynamic>?;
           final chatId = pathParameters['chatId']!;
-          final otherUser = extra?['otherUser'] as User?;
-          return ChatView(chatId: chatId, otherUser: otherUser,);
+          final otherUser = extra?['otherUser'] as Map<String,dynamic>?;
+          return ChatView(chatId: chatId, otherUser: otherUser?.toUser(),);
         },
       ),
       GoRoute(
@@ -134,3 +136,5 @@ class ErrorView extends StatelessWidget {
         ),
       );
 }
+
+

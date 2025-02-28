@@ -1,7 +1,6 @@
-import 'dart:convert';
 import 'package:fara_chat/data/database/database.dart';
 
-extension UsernExtension on Map<String, dynamic> {
+extension UserExtension on Map<String, dynamic> {
   User toUser() => User(
         id: this['id'] as String,
         email: this['email'] as String,
@@ -11,13 +10,23 @@ extension UsernExtension on Map<String, dynamic> {
       );
 }
 
+extension UserToJsonExtension on User {
+  Map<String, dynamic> toJson() => {
+    'id' : id,
+    'email' : email,
+    'username' : username,
+    'avatar_url' : avatarUrl,
+  'is_online' : isOnline,
+  };
+}
+
 extension ChatExtension on Map<String, dynamic> {
   Chat toChat() => Chat(
         id: this['id'] as String,
         name: this['name'] as String?,
         createdAt: DateTime.parse(this['created_at'] as String),
         updatedAt: DateTime.parse(this['updated_at'] as String),
-        userIds: this['user_ids'] != null ? List<String>.from(jsonEncode(this['user_ids'] ) as List) : <String>[],
+        userIds: this['user_ids'] != null ? List<String>.from(this['user_ids'] as List<dynamic>) : <String>[],
         lastMessageText: this['last_message_text'] as String?,
         lastMessageUserId: this['last_message_user_id'] as String?,
         lastMessageType: this['last_message_type'] as String?,
