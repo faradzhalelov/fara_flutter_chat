@@ -1,14 +1,17 @@
+import 'package:fara_chat/core/supabase/supabase_service.dart';
 import 'package:fara_chat/data/models/user_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'auth_provider.g.dart';
 
+// Add this method to your existing AuthNotifier class in auth_provider.dart
+
+
 @riverpod
 class AuthNotifier extends _$AuthNotifier {
   @override
   Future<UserModel?> build() async {
-    final supabase = Supabase.instance.client;
     final session = supabase.auth.currentSession;
     
     if (session == null) return null;
@@ -25,17 +28,27 @@ class AuthNotifier extends _$AuthNotifier {
       return null;
     }
   }
+
+  // This method provides a stream of auth state changes for the router to listen to
+Stream<UserModel?> authStateChanges() => supabase.auth.onAuthStateChange.map((event) {
+    if (event.session == null) {
+      return null;
+    }
+    _refreshState();
+    return state.value;
+  });
+
   
   Future<void> signIn(String email, String password) async {
     state = const AsyncValue.loading();
     
     try {
-      await Supabase.instance.client.auth.signInWithPassword(
+      await supabase.auth.signInWithPassword(
         email: email,
         password: password,
       );
       
-      await Supabase.instance.client.from('users').update({
+      await supabase.from('users').update({
         'is_online': true,
       }).eq('id', Supabase.instance.client.auth.currentUser!.id);
       
@@ -49,15 +62,15 @@ class AuthNotifier extends _$AuthNotifier {
     state = const AsyncValue.loading();
     
     try {
-      await Supabase.instance.client.auth.signUp(
+      await supabase.auth.signUp(
         email: email, 
         password: password,
         data: {'username': username},
       );
       
       // Create user profile in users table
-      await Supabase.instance.client.from('users').insert({
-        'id': Supabase.instance.client.auth.currentUser!.id,
+      await supabase.from('users').insert({
+        'id': supabase.auth.currentUser!.id,
         'email': email,
         'username': username,
       });
@@ -72,15 +85,15 @@ class AuthNotifier extends _$AuthNotifier {
     state = const AsyncValue.loading();
     
     try {
-      final userId = Supabase.instance.client.auth.currentUser?.id;
+      final userId = supabase.auth.currentUser?.id;
       
       if (userId != null) {
-        await Supabase.instance.client.from('users').update({
+        await supabase.from('users').update({
           'is_online': false,
         }).eq('id', userId);
       }
       
-      await Supabase.instance.client.auth.signOut();
+      await supabase.auth.signOut();
       state = const AsyncValue.data(null);
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
@@ -89,7 +102,7 @@ class AuthNotifier extends _$AuthNotifier {
   
   Future<void> _refreshState() async {
     try {
-      final userId = Supabase.instance.client.auth.currentUser?.id;
+      final userId = supabase.auth.currentUser?.id;
       
       if (userId == null) {
         state = const AsyncValue.data(null);
