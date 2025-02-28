@@ -2,6 +2,7 @@
 import 'dart:async';
 
 import 'package:fara_chat/app/lifecycle/app_lifecycle.dart';
+import 'package:fara_chat/app/router/router.dart';
 import 'package:fara_chat/app/theme/icons.dart';
 import 'package:fara_chat/app/theme/text_styles.dart';
 import 'package:fara_chat/app/theme/theme.dart';

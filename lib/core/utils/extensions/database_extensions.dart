@@ -36,6 +36,7 @@ extension MessageCompanionExtension on Map<String, dynamic> {
         content: Value(this['content'] as String?),
         type: Value(this['type'] as String),
         fileUrl: Value(this['file_url'] as String?),
+        isRead: Value(this['is_read'] as bool? ?? false),
         createdAt: Value(DateTime.parse(this['created_at'] as String)),
       );
 }

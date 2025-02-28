@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:fara_chat/core/supabase/supabase_service.dart';
-import 'package:fara_chat/core/utils/extensions/extensions.dart';
+import 'package:fara_chat/core/utils/extensions/database_extensions.dart';
 import 'package:fara_chat/data/database/database.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 

@@ -1,150 +1,136 @@
-import 'dart:async';
+// lib/core/router/app_router.dart
+import 'dart:developer';
 
-import 'package:fara_chat/providers/auth/auth_provider.dart';
-import 'package:fara_chat/ui/pages/auth/auth_page.dart';
-import 'package:fara_chat/ui/pages/chats/chat_page.dart';
-import 'package:fara_chat/ui/pages/chats/chats_list_page.dart';
-import 'package:fara_chat/ui/pages/users/user_search_page.dart';
-import 'package:fara_chat/ui/widgets/common/error_view.dart';
+import 'package:fara_chat/app/theme/icons.dart';
+import 'package:fara_chat/app/theme/text_styles.dart';
+import 'package:fara_chat/data/database/database.dart';
+import 'package:fara_chat/presentation/auth/view/login_view.dart';
+import 'package:fara_chat/presentation/auth/view/register_view.dart';
+import 'package:fara_chat/presentation/chat/view/chat_view.dart';
+import 'package:fara_chat/presentation/chat_list/view/chat_list_view.dart';
+import 'package:fara_chat/presentation/profile/view/profile_view.dart';
+import 'package:fara_chat/presentation/splash/splash_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'app_router.g.dart';
+part 'router.g.dart';
 
-// Router configuration with GoRouter
+final navigatorKey = GlobalKey<NavigatorState>();
+
+/// Router configuration for the app using GoRouter
 @riverpod
-GoRouter appRouter(Ref ref) {
-  final authState = ref.watch(authNotifierProvider);
-  
-  return GoRouter(
-    initialLocation: '/',
+GoRouter appRouter(Ref ref) => GoRouter(
+    initialLocation: '/${SplashView.routePath}',
     debugLogDiagnostics: true,
-    redirect: (context, state) {
-      // Handle auth redirects
-      final isLoggedIn = authState.value != null;
-      final isGoingToLogin = state.matchedLocation == '/login';
-      
-      // If not logged in and not going to login, redirect to login
-      if (!isLoggedIn && !isGoingToLogin) {
-        return '/login';
-      }
-      
-      // If logged in and going to login, redirect to home
-      if (isLoggedIn && isGoingToLogin) {
-        return '/';
-      }
-      
-      // No redirect needed
-      return null;
-    },
-    refreshListenable: GoRouterRefreshStream(ref.read(authNotifierProvider.notifier).authStateChanges()),
+    navigatorKey: navigatorKey,
+    observers: [
+      MyNavigatorObserver(),
+    ],
+
+    // Error handling
+    errorBuilder: (context, state) => ErrorView(state),
+
+    // Define routes
     routes: [
-      // Home (Chat List)
+      // Splash screen route - always accessible
+      GoRoute(
+        path: '/${SplashView.routePath}',
+        builder: (context, state) => const SplashView(),
+      ),
+
+      // Authentication routes
+      GoRoute(
+        path: '/${LoginView.routePath}',
+        builder: (context, state) => const LoginView(),
+      ),
+      GoRoute(
+        path: '/${RegisterView.routePath}',
+        builder: (context, state) => const RegisterView(),
+      ),
+
+      // Main app routes
       GoRoute(
         path: '/',
-        name: Routes.home,
-        builder: (context, state) => const ChatListPage(),
-        routes: [
-          // Chat Detail
-          GoRoute(
-            path: 'chat/:chatId',
-            name: Routes.chat,
-            builder: (context, state) {
-              final chatId = state.pathParameters['chatId']!;
-              final chatName = state.extra is Map ? (state.extra! as Map)['chatName'] as String? : null;
-              
-              return ChatPage(
-                chatId: chatId,
-                chatName: chatName ?? 'Chat',
-              );
-            },
-          ),
-          
-          // User Search
-          GoRoute(
-            path: 'search',
-            name: Routes.userSearch,
-            builder: (context, state) => const UserSearchPage(),
-          ),
-        ],
+        builder: (context, state) => const ChatListView(),
       ),
-      
-      // Auth
       GoRoute(
-        path: '/login',
-        name: Routes.login,
-        builder: (context, state) => const AuthPage(),
+        path: '/${ChatView.routePath}/:chatId',
+        builder: (context, state) {
+          final pathParameters = state.pathParameters;
+          final extra = state.extra as Map<String, dynamic>?;
+          final chatId = pathParameters['chatId']!;
+          final otherUser = extra?['otherUser'] as User?;
+          return ChatView(chatId: chatId, otherUser: otherUser,);
+        },
       ),
-      
-      // Not Found
       GoRoute(
-        path: '/not-found',
-        name: Routes.notFound,
-        builder: (context, state) => Scaffold(
-          appBar: AppBar(title: const Text('Not Found')),
-          body: Center(
-            child: ErrorView(
-              message: 'The page you are looking for does not exist.',
-              onRetry: () => context.go('/'),
-            ),
-          ),
-        ),
+        path: '/${ProfileView.routePath}',
+        builder: (context, state) => const ProfileView(),
       ),
     ],
-    errorBuilder: (context, state) => Scaffold(
-      body: Center(
-        child: ErrorView(
-          message: state.error.toString(),
-          onRetry: () => context.go('/'),
-        ),
-      ),
-    ),
   );
-}
 
-// Route names for easier reference
-class Routes {
-  static const String home = 'home';
-  static const String login = 'login';
-  static const String chat = 'chat';
-  static const String userSearch = 'userSearch';
-  static const String notFound = 'notFound';
-  
-  // Prevent instantiation
-  Routes._();
-}
+/// Provider for router key to force rebuild when needed
+@riverpod
+GlobalKey<NavigatorState> routerKey(Ref ref) => GlobalKey<NavigatorState>();
 
-// Extension for convenient navigation
-extension GoRouterExtension on BuildContext {
-  // Navigate to chat screen
-  void navigateToChat(String chatId, {String? chatName}) {
-    goNamed(
-      Routes.chat,
-      pathParameters: {'chatId': chatId},
-      extra: {'chatName': chatName},
-    );
+
+
+class MyNavigatorObserver extends NavigatorObserver {
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    super.didPush(route, previousRoute);
+    log('Pushed route: ${route.settings.name}');
   }
-  
-  // Navigate to user search screen and handle result
-  Future<Map<String, dynamic>?> navigateToUserSearch() async => pushNamed<Map<String, dynamic>?>(Routes.userSearch);
-}
-
-// Utility class to make GoRouter listen to auth changes from Riverpod
-class GoRouterRefreshStream extends ChangeNotifier {
-  GoRouterRefreshStream(Stream<dynamic> stream) {
-    notifyListeners();
-    _subscription = stream.asBroadcastStream().listen(
-          (dynamic _) => notifyListeners(),
-        );
-  }
-
-  late final StreamSubscription<dynamic> _subscription;
 
   @override
-  void dispose() {
-    _subscription.cancel();
-    super.dispose();
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    super.didPop(route, previousRoute);
+    log('Popped route: ${route.settings.name}');
   }
+
+  @override
+  void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    super.didRemove(route, previousRoute);
+    log('Removed route: ${route.settings.name}');
+  }
+
+  @override
+  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
+    super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
+    log('Replaced route: ${newRoute?.settings.name}');
+  }
+}
+
+class ErrorView extends StatelessWidget {
+  const ErrorView(this.state, {super.key});
+  final GoRouterState state;
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                Icomoon.error,
+                color: Colors.red,
+                size: 48,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Страница не найдена: ${state.uri.path}',
+                style: AppTextStyles.medium,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () => GoRouter.of(context).go('/'),
+                child: const Text('Вернуться на главную'),
+              ),
+            ],
+          ),
+        ),
+      );
 }

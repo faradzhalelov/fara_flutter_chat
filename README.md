@@ -1,4 +1,6 @@
 # fara_chat
+### Based on flutter_chat v1:
+    - https://github.com/faradzhalelov/flutter_chat
 
 Simple flutter chat app (Supabase && drift)
 

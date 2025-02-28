@@ -847,9 +847,18 @@ class $MessagesTable extends Messages with TableInfo<$MessagesTable, Message> {
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _isReadMeta = const VerificationMeta('isRead');
+  @override
+  late final GeneratedColumn<bool> isRead = GeneratedColumn<bool>(
+      'is_read', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_read" IN (0, 1))'),
+      defaultValue: const Constant(false));
   @override
   List<GeneratedColumn> get $columns =>
-      [id, chatId, userId, content, type, fileUrl, createdAt];
+      [id, chatId, userId, content, type, fileUrl, createdAt, isRead];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -895,6 +904,10 @@ class $MessagesTable extends Messages with TableInfo<$MessagesTable, Message> {
     } else if (isInserting) {
       context.missing(_createdAtMeta);
     }
+    if (data.containsKey('is_read')) {
+      context.handle(_isReadMeta,
+          isRead.isAcceptableOrUnknown(data['is_read']!, _isReadMeta));
+    }
     return context;
   }
 
@@ -918,6 +931,8 @@ class $MessagesTable extends Messages with TableInfo<$MessagesTable, Message> {
           .read(DriftSqlType.string, data['${effectivePrefix}file_url']),
       createdAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      isRead: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_read'])!,
     );
   }
 
@@ -935,6 +950,7 @@ class Message extends DataClass implements Insertable<Message> {
   final String type;
   final String? fileUrl;
   final DateTime createdAt;
+  final bool isRead;
   const Message(
       {required this.id,
       required this.chatId,
@@ -942,7 +958,8 @@ class Message extends DataClass implements Insertable<Message> {
       this.content,
       required this.type,
       this.fileUrl,
-      required this.createdAt});
+      required this.createdAt,
+      required this.isRead});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -959,6 +976,7 @@ class Message extends DataClass implements Insertable<Message> {
       map['file_url'] = Variable<String>(fileUrl);
     }
     map['created_at'] = Variable<DateTime>(createdAt);
+    map['is_read'] = Variable<bool>(isRead);
     return map;
   }
 
@@ -976,6 +994,7 @@ class Message extends DataClass implements Insertable<Message> {
           ? const Value.absent()
           : Value(fileUrl),
       createdAt: Value(createdAt),
+      isRead: Value(isRead),
     );
   }
 
@@ -990,6 +1009,7 @@ class Message extends DataClass implements Insertable<Message> {
       type: serializer.fromJson<String>(json['type']),
       fileUrl: serializer.fromJson<String?>(json['fileUrl']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      isRead: serializer.fromJson<bool>(json['isRead']),
     );
   }
   @override
@@ -1003,6 +1023,7 @@ class Message extends DataClass implements Insertable<Message> {
       'type': serializer.toJson<String>(type),
       'fileUrl': serializer.toJson<String?>(fileUrl),
       'createdAt': serializer.toJson<DateTime>(createdAt),
+      'isRead': serializer.toJson<bool>(isRead),
     };
   }
 
@@ -1013,7 +1034,8 @@ class Message extends DataClass implements Insertable<Message> {
           Value<String?> content = const Value.absent(),
           String? type,
           Value<String?> fileUrl = const Value.absent(),
-          DateTime? createdAt}) =>
+          DateTime? createdAt,
+          bool? isRead}) =>
       Message(
         id: id ?? this.id,
         chatId: chatId ?? this.chatId,
@@ -1022,6 +1044,7 @@ class Message extends DataClass implements Insertable<Message> {
         type: type ?? this.type,
         fileUrl: fileUrl.present ? fileUrl.value : this.fileUrl,
         createdAt: createdAt ?? this.createdAt,
+        isRead: isRead ?? this.isRead,
       );
   Message copyWithCompanion(MessagesCompanion data) {
     return Message(
@@ -1032,6 +1055,7 @@ class Message extends DataClass implements Insertable<Message> {
       type: data.type.present ? data.type.value : this.type,
       fileUrl: data.fileUrl.present ? data.fileUrl.value : this.fileUrl,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      isRead: data.isRead.present ? data.isRead.value : this.isRead,
     );
   }
 
@@ -1044,14 +1068,15 @@ class Message extends DataClass implements Insertable<Message> {
           ..write('content: $content, ')
           ..write('type: $type, ')
           ..write('fileUrl: $fileUrl, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('isRead: $isRead')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, chatId, userId, content, type, fileUrl, createdAt);
+  int get hashCode => Object.hash(
+      id, chatId, userId, content, type, fileUrl, createdAt, isRead);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1062,7 +1087,8 @@ class Message extends DataClass implements Insertable<Message> {
           other.content == this.content &&
           other.type == this.type &&
           other.fileUrl == this.fileUrl &&
-          other.createdAt == this.createdAt);
+          other.createdAt == this.createdAt &&
+          other.isRead == this.isRead);
 }
 
 class MessagesCompanion extends UpdateCompanion<Message> {
@@ -1073,6 +1099,7 @@ class MessagesCompanion extends UpdateCompanion<Message> {
   final Value<String> type;
   final Value<String?> fileUrl;
   final Value<DateTime> createdAt;
+  final Value<bool> isRead;
   final Value<int> rowid;
   const MessagesCompanion({
     this.id = const Value.absent(),
@@ -1082,6 +1109,7 @@ class MessagesCompanion extends UpdateCompanion<Message> {
     this.type = const Value.absent(),
     this.fileUrl = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.isRead = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   MessagesCompanion.insert({
@@ -1092,6 +1120,7 @@ class MessagesCompanion extends UpdateCompanion<Message> {
     required String type,
     this.fileUrl = const Value.absent(),
     required DateTime createdAt,
+    this.isRead = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : id = Value(id),
         chatId = Value(chatId),
@@ -1105,6 +1134,7 @@ class MessagesCompanion extends UpdateCompanion<Message> {
     Expression<String>? type,
     Expression<String>? fileUrl,
     Expression<DateTime>? createdAt,
+    Expression<bool>? isRead,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -1115,6 +1145,7 @@ class MessagesCompanion extends UpdateCompanion<Message> {
       if (type != null) 'type': type,
       if (fileUrl != null) 'file_url': fileUrl,
       if (createdAt != null) 'created_at': createdAt,
+      if (isRead != null) 'is_read': isRead,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -1127,6 +1158,7 @@ class MessagesCompanion extends UpdateCompanion<Message> {
       Value<String>? type,
       Value<String?>? fileUrl,
       Value<DateTime>? createdAt,
+      Value<bool>? isRead,
       Value<int>? rowid}) {
     return MessagesCompanion(
       id: id ?? this.id,
@@ -1136,6 +1168,7 @@ class MessagesCompanion extends UpdateCompanion<Message> {
       type: type ?? this.type,
       fileUrl: fileUrl ?? this.fileUrl,
       createdAt: createdAt ?? this.createdAt,
+      isRead: isRead ?? this.isRead,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -1164,6 +1197,9 @@ class MessagesCompanion extends UpdateCompanion<Message> {
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
+    if (isRead.present) {
+      map['is_read'] = Variable<bool>(isRead.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -1180,6 +1216,7 @@ class MessagesCompanion extends UpdateCompanion<Message> {
           ..write('type: $type, ')
           ..write('fileUrl: $fileUrl, ')
           ..write('createdAt: $createdAt, ')
+          ..write('isRead: $isRead, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -1602,6 +1639,7 @@ typedef $$MessagesTableCreateCompanionBuilder = MessagesCompanion Function({
   required String type,
   Value<String?> fileUrl,
   required DateTime createdAt,
+  Value<bool> isRead,
   Value<int> rowid,
 });
 typedef $$MessagesTableUpdateCompanionBuilder = MessagesCompanion Function({
@@ -1612,6 +1650,7 @@ typedef $$MessagesTableUpdateCompanionBuilder = MessagesCompanion Function({
   Value<String> type,
   Value<String?> fileUrl,
   Value<DateTime> createdAt,
+  Value<bool> isRead,
   Value<int> rowid,
 });
 
@@ -1644,6 +1683,9 @@ class $$MessagesTableFilterComposer
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isRead => $composableBuilder(
+      column: $table.isRead, builder: (column) => ColumnFilters(column));
 }
 
 class $$MessagesTableOrderingComposer
@@ -1675,6 +1717,9 @@ class $$MessagesTableOrderingComposer
 
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isRead => $composableBuilder(
+      column: $table.isRead, builder: (column) => ColumnOrderings(column));
 }
 
 class $$MessagesTableAnnotationComposer
@@ -1706,6 +1751,9 @@ class $$MessagesTableAnnotationComposer
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<bool> get isRead =>
+      $composableBuilder(column: $table.isRead, builder: (column) => column);
 }
 
 class $$MessagesTableTableManager extends RootTableManager<
@@ -1738,6 +1786,7 @@ class $$MessagesTableTableManager extends RootTableManager<
             Value<String> type = const Value.absent(),
             Value<String?> fileUrl = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
+            Value<bool> isRead = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               MessagesCompanion(
@@ -1748,6 +1797,7 @@ class $$MessagesTableTableManager extends RootTableManager<
             type: type,
             fileUrl: fileUrl,
             createdAt: createdAt,
+            isRead: isRead,
             rowid: rowid,
           ),
           createCompanionCallback: ({
@@ -1758,6 +1808,7 @@ class $$MessagesTableTableManager extends RootTableManager<
             required String type,
             Value<String?> fileUrl = const Value.absent(),
             required DateTime createdAt,
+            Value<bool> isRead = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               MessagesCompanion.insert(
@@ -1768,6 +1819,7 @@ class $$MessagesTableTableManager extends RootTableManager<
             type: type,
             fileUrl: fileUrl,
             createdAt: createdAt,
+            isRead: isRead,
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0

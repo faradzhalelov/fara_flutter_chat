@@ -1,8 +1,8 @@
 import 'dart:convert';
+import 'package:fara_chat/core/supabase/supabase_service.dart';
 import 'package:fara_chat/data/database/database.dart';
 import 'package:fara_chat/data/models/chat_model.dart';
 import 'package:fara_chat/data/repositories/chat_repository.dart';
-import 'package:fara_chat/providers/auth/auth_provider.dart';
 import 'package:fara_chat/providers/database/database_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -23,7 +23,7 @@ ChatRepository chatRepository(Ref ref) {
 class ChatsNotifier extends _$ChatsNotifier {
   @override
   Stream<List<ChatModel>> build() {
-    final currentUser = ref.watch(authNotifierProvider).valueOrNull;
+    final currentUser = supabase.auth.currentSession?.user;
     
     if (currentUser == null) {
       return Stream.value([]);

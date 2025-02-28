@@ -1,13 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'chat_messages_provider.dart';
+part of 'chat_view_model.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$chatMessagesNotifierHash() =>
-    r'1f86b3e032d66bb2080227758fac42d9bfbe1bca';
+String _$chatViewModelHash() => r'8759b3dc8af9c719fa24cb18742d6355cef7ea2e';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,37 +29,43 @@ class _SystemHash {
   }
 }
 
-abstract class _$ChatMessagesNotifier
-    extends BuildlessAutoDisposeStreamNotifier<List<MessageModel>> {
+abstract class _$ChatViewModel extends BuildlessAutoDisposeAsyncNotifier<void> {
   late final String chatId;
 
-  Stream<List<MessageModel>> build(
+  FutureOr<void> build(
     String chatId,
   );
 }
 
-/// See also [ChatMessagesNotifier].
-@ProviderFor(ChatMessagesNotifier)
-const chatMessagesNotifierProvider = ChatMessagesNotifierFamily();
+/// ViewModel for the chat screen using the abstract ChatRepository
+///
+/// Copied from [ChatViewModel].
+@ProviderFor(ChatViewModel)
+const chatViewModelProvider = ChatViewModelFamily();
 
-/// See also [ChatMessagesNotifier].
-class ChatMessagesNotifierFamily
-    extends Family<AsyncValue<List<MessageModel>>> {
-  /// See also [ChatMessagesNotifier].
-  const ChatMessagesNotifierFamily();
+/// ViewModel for the chat screen using the abstract ChatRepository
+///
+/// Copied from [ChatViewModel].
+class ChatViewModelFamily extends Family<AsyncValue<void>> {
+  /// ViewModel for the chat screen using the abstract ChatRepository
+  ///
+  /// Copied from [ChatViewModel].
+  const ChatViewModelFamily();
 
-  /// See also [ChatMessagesNotifier].
-  ChatMessagesNotifierProvider call(
+  /// ViewModel for the chat screen using the abstract ChatRepository
+  ///
+  /// Copied from [ChatViewModel].
+  ChatViewModelProvider call(
     String chatId,
   ) {
-    return ChatMessagesNotifierProvider(
+    return ChatViewModelProvider(
       chatId,
     );
   }
 
   @override
-  ChatMessagesNotifierProvider getProviderOverride(
-    covariant ChatMessagesNotifierProvider provider,
+  ChatViewModelProvider getProviderOverride(
+    covariant ChatViewModelProvider provider,
   ) {
     return call(
       provider.chatId,
@@ -79,31 +84,34 @@ class ChatMessagesNotifierFamily
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'chatMessagesNotifierProvider';
+  String? get name => r'chatViewModelProvider';
 }
 
-/// See also [ChatMessagesNotifier].
-class ChatMessagesNotifierProvider
-    extends AutoDisposeStreamNotifierProviderImpl<ChatMessagesNotifier,
-        List<MessageModel>> {
-  /// See also [ChatMessagesNotifier].
-  ChatMessagesNotifierProvider(
+/// ViewModel for the chat screen using the abstract ChatRepository
+///
+/// Copied from [ChatViewModel].
+class ChatViewModelProvider
+    extends AutoDisposeAsyncNotifierProviderImpl<ChatViewModel, void> {
+  /// ViewModel for the chat screen using the abstract ChatRepository
+  ///
+  /// Copied from [ChatViewModel].
+  ChatViewModelProvider(
     String chatId,
   ) : this._internal(
-          () => ChatMessagesNotifier()..chatId = chatId,
-          from: chatMessagesNotifierProvider,
-          name: r'chatMessagesNotifierProvider',
+          () => ChatViewModel()..chatId = chatId,
+          from: chatViewModelProvider,
+          name: r'chatViewModelProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$chatMessagesNotifierHash,
-          dependencies: ChatMessagesNotifierFamily._dependencies,
+                  : _$chatViewModelHash,
+          dependencies: ChatViewModelFamily._dependencies,
           allTransitiveDependencies:
-              ChatMessagesNotifierFamily._allTransitiveDependencies,
+              ChatViewModelFamily._allTransitiveDependencies,
           chatId: chatId,
         );
 
-  ChatMessagesNotifierProvider._internal(
+  ChatViewModelProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -116,8 +124,8 @@ class ChatMessagesNotifierProvider
   final String chatId;
 
   @override
-  Stream<List<MessageModel>> runNotifierBuild(
-    covariant ChatMessagesNotifier notifier,
+  FutureOr<void> runNotifierBuild(
+    covariant ChatViewModel notifier,
   ) {
     return notifier.build(
       chatId,
@@ -125,10 +133,10 @@ class ChatMessagesNotifierProvider
   }
 
   @override
-  Override overrideWith(ChatMessagesNotifier Function() create) {
+  Override overrideWith(ChatViewModel Function() create) {
     return ProviderOverride(
       origin: this,
-      override: ChatMessagesNotifierProvider._internal(
+      override: ChatViewModelProvider._internal(
         () => create()..chatId = chatId,
         from: from,
         name: null,
@@ -141,14 +149,13 @@ class ChatMessagesNotifierProvider
   }
 
   @override
-  AutoDisposeStreamNotifierProviderElement<ChatMessagesNotifier,
-      List<MessageModel>> createElement() {
-    return _ChatMessagesNotifierProviderElement(this);
+  AutoDisposeAsyncNotifierProviderElement<ChatViewModel, void> createElement() {
+    return _ChatViewModelProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is ChatMessagesNotifierProvider && other.chatId == chatId;
+    return other is ChatViewModelProvider && other.chatId == chatId;
   }
 
   @override
@@ -162,19 +169,18 @@ class ChatMessagesNotifierProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin ChatMessagesNotifierRef
-    on AutoDisposeStreamNotifierProviderRef<List<MessageModel>> {
+mixin ChatViewModelRef on AutoDisposeAsyncNotifierProviderRef<void> {
   /// The parameter `chatId` of this provider.
   String get chatId;
 }
 
-class _ChatMessagesNotifierProviderElement
-    extends AutoDisposeStreamNotifierProviderElement<ChatMessagesNotifier,
-        List<MessageModel>> with ChatMessagesNotifierRef {
-  _ChatMessagesNotifierProviderElement(super.provider);
+class _ChatViewModelProviderElement
+    extends AutoDisposeAsyncNotifierProviderElement<ChatViewModel, void>
+    with ChatViewModelRef {
+  _ChatViewModelProviderElement(super.provider);
 
   @override
-  String get chatId => (origin as ChatMessagesNotifierProvider).chatId;
+  String get chatId => (origin as ChatViewModelProvider).chatId;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
