@@ -46,6 +46,11 @@ dependencies:
   drift_flutter: ^0.2.4
   sqlite3_flutter_libs: ^0.5.31
 
+  #models
+  freezed_annotation: ^3.0.0
+  json_annotation: ^4.9.0
+  
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -54,6 +59,8 @@ dev_dependencies:
   drift_dev: ^2.25.2
   riverpod_generator: ^2.6.4
   riverpod_lint: ^2.6.5
+  json_serializable: ^6.9.4
+  freezed: ^3.0.0-0.0.dev
   build_runner: ^2.4.15
 
 flutter:
