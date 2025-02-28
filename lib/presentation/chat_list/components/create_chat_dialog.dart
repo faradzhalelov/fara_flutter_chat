@@ -5,6 +5,7 @@ import 'package:fara_chat/app/theme/colors.dart';
 import 'package:fara_chat/app/theme/icons.dart';
 import 'package:fara_chat/app/theme/text_styles.dart';
 import 'package:fara_chat/core/supabase/supabase_service.dart';
+import 'package:fara_chat/core/utils/extensions/database_extensions.dart';
 import 'package:fara_chat/data/database/database.dart';
 import 'package:fara_chat/presentation/chat_list/view_model/chat_list_view_model.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ final availableUsersProvider =
         .neq('id', currentUser.id);
 
     final allUsers =
-        response.map((userData) => User.fromJson(userData)).toList();
+        response.map((userData) => userData.toUser()).toList();
 
     // Get list of users who already have chats with the current user
     final existingChats =

@@ -1,13 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'database.dart';
+part of 'database_impl.dart';
 
 // ignore_for_file: type=lint
-class $UsersTable extends Users with TableInfo<$UsersTable, User> {
+class $UsersTableTable extends UsersTable
+    with TableInfo<$UsersTableTable, UsersTableData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $UsersTable(this.attachedDatabase, [this._alias]);
+  $UsersTableTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
@@ -47,9 +48,9 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'users';
+  static const String $name = 'users_table';
   @override
-  VerificationContext validateIntegrity(Insertable<User> instance,
+  VerificationContext validateIntegrity(Insertable<UsersTableData> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -84,9 +85,9 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  User map(Map<String, dynamic> data, {String? tablePrefix}) {
+  UsersTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return User(
+    return UsersTableData(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
       email: attachedDatabase.typeMapping
@@ -101,18 +102,18 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   }
 
   @override
-  $UsersTable createAlias(String alias) {
-    return $UsersTable(attachedDatabase, alias);
+  $UsersTableTable createAlias(String alias) {
+    return $UsersTableTable(attachedDatabase, alias);
   }
 }
 
-class User extends DataClass implements Insertable<User> {
+class UsersTableData extends DataClass implements Insertable<UsersTableData> {
   final String id;
   final String email;
   final String username;
   final String? avatarUrl;
   final bool isOnline;
-  const User(
+  const UsersTableData(
       {required this.id,
       required this.email,
       required this.username,
@@ -131,8 +132,8 @@ class User extends DataClass implements Insertable<User> {
     return map;
   }
 
-  UsersCompanion toCompanion(bool nullToAbsent) {
-    return UsersCompanion(
+  UsersTableCompanion toCompanion(bool nullToAbsent) {
+    return UsersTableCompanion(
       id: Value(id),
       email: Value(email),
       username: Value(username),
@@ -143,10 +144,10 @@ class User extends DataClass implements Insertable<User> {
     );
   }
 
-  factory User.fromJson(Map<String, dynamic> json,
+  factory UsersTableData.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return User(
+    return UsersTableData(
       id: serializer.fromJson<String>(json['id']),
       email: serializer.fromJson<String>(json['email']),
       username: serializer.fromJson<String>(json['username']),
@@ -166,21 +167,21 @@ class User extends DataClass implements Insertable<User> {
     };
   }
 
-  User copyWith(
+  UsersTableData copyWith(
           {String? id,
           String? email,
           String? username,
           Value<String?> avatarUrl = const Value.absent(),
           bool? isOnline}) =>
-      User(
+      UsersTableData(
         id: id ?? this.id,
         email: email ?? this.email,
         username: username ?? this.username,
         avatarUrl: avatarUrl.present ? avatarUrl.value : this.avatarUrl,
         isOnline: isOnline ?? this.isOnline,
       );
-  User copyWithCompanion(UsersCompanion data) {
-    return User(
+  UsersTableData copyWithCompanion(UsersTableCompanion data) {
+    return UsersTableData(
       id: data.id.present ? data.id.value : this.id,
       email: data.email.present ? data.email.value : this.email,
       username: data.username.present ? data.username.value : this.username,
@@ -191,7 +192,7 @@ class User extends DataClass implements Insertable<User> {
 
   @override
   String toString() {
-    return (StringBuffer('User(')
+    return (StringBuffer('UsersTableData(')
           ..write('id: $id, ')
           ..write('email: $email, ')
           ..write('username: $username, ')
@@ -206,7 +207,7 @@ class User extends DataClass implements Insertable<User> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is User &&
+      (other is UsersTableData &&
           other.id == this.id &&
           other.email == this.email &&
           other.username == this.username &&
@@ -214,14 +215,14 @@ class User extends DataClass implements Insertable<User> {
           other.isOnline == this.isOnline);
 }
 
-class UsersCompanion extends UpdateCompanion<User> {
+class UsersTableCompanion extends UpdateCompanion<UsersTableData> {
   final Value<String> id;
   final Value<String> email;
   final Value<String> username;
   final Value<String?> avatarUrl;
   final Value<bool> isOnline;
   final Value<int> rowid;
-  const UsersCompanion({
+  const UsersTableCompanion({
     this.id = const Value.absent(),
     this.email = const Value.absent(),
     this.username = const Value.absent(),
@@ -229,7 +230,7 @@ class UsersCompanion extends UpdateCompanion<User> {
     this.isOnline = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  UsersCompanion.insert({
+  UsersTableCompanion.insert({
     required String id,
     required String email,
     required String username,
@@ -239,7 +240,7 @@ class UsersCompanion extends UpdateCompanion<User> {
   })  : id = Value(id),
         email = Value(email),
         username = Value(username);
-  static Insertable<User> custom({
+  static Insertable<UsersTableData> custom({
     Expression<String>? id,
     Expression<String>? email,
     Expression<String>? username,
@@ -257,14 +258,14 @@ class UsersCompanion extends UpdateCompanion<User> {
     });
   }
 
-  UsersCompanion copyWith(
+  UsersTableCompanion copyWith(
       {Value<String>? id,
       Value<String>? email,
       Value<String>? username,
       Value<String?>? avatarUrl,
       Value<bool>? isOnline,
       Value<int>? rowid}) {
-    return UsersCompanion(
+    return UsersTableCompanion(
       id: id ?? this.id,
       email: email ?? this.email,
       username: username ?? this.username,
@@ -300,7 +301,7 @@ class UsersCompanion extends UpdateCompanion<User> {
 
   @override
   String toString() {
-    return (StringBuffer('UsersCompanion(')
+    return (StringBuffer('UsersTableCompanion(')
           ..write('id: $id, ')
           ..write('email: $email, ')
           ..write('username: $username, ')
@@ -312,11 +313,12 @@ class UsersCompanion extends UpdateCompanion<User> {
   }
 }
 
-class $ChatsTable extends Chats with TableInfo<$ChatsTable, Chat> {
+class $ChatsTableTable extends ChatsTable
+    with TableInfo<$ChatsTableTable, ChatsTableData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $ChatsTable(this.attachedDatabase, [this._alias]);
+  $ChatsTableTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
@@ -385,9 +387,9 @@ class $ChatsTable extends Chats with TableInfo<$ChatsTable, Chat> {
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'chats';
+  static const String $name = 'chats_table';
   @override
-  VerificationContext validateIntegrity(Insertable<Chat> instance,
+  VerificationContext validateIntegrity(Insertable<ChatsTableData> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -448,9 +450,9 @@ class $ChatsTable extends Chats with TableInfo<$ChatsTable, Chat> {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Chat map(Map<String, dynamic> data, {String? tablePrefix}) {
+  ChatsTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Chat(
+    return ChatsTableData(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
       name: attachedDatabase.typeMapping
@@ -473,12 +475,12 @@ class $ChatsTable extends Chats with TableInfo<$ChatsTable, Chat> {
   }
 
   @override
-  $ChatsTable createAlias(String alias) {
-    return $ChatsTable(attachedDatabase, alias);
+  $ChatsTableTable createAlias(String alias) {
+    return $ChatsTableTable(attachedDatabase, alias);
   }
 }
 
-class Chat extends DataClass implements Insertable<Chat> {
+class ChatsTableData extends DataClass implements Insertable<ChatsTableData> {
   final String id;
   final String? name;
   final DateTime createdAt;
@@ -488,7 +490,7 @@ class Chat extends DataClass implements Insertable<Chat> {
   final String? lastMessageUserId;
   final String? lastMessageType;
   final DateTime? lastMessageAt;
-  const Chat(
+  const ChatsTableData(
       {required this.id,
       this.name,
       required this.createdAt,
@@ -523,8 +525,8 @@ class Chat extends DataClass implements Insertable<Chat> {
     return map;
   }
 
-  ChatsCompanion toCompanion(bool nullToAbsent) {
-    return ChatsCompanion(
+  ChatsTableCompanion toCompanion(bool nullToAbsent) {
+    return ChatsTableCompanion(
       id: Value(id),
       name: name == null && nullToAbsent ? const Value.absent() : Value(name),
       createdAt: Value(createdAt),
@@ -545,10 +547,10 @@ class Chat extends DataClass implements Insertable<Chat> {
     );
   }
 
-  factory Chat.fromJson(Map<String, dynamic> json,
+  factory ChatsTableData.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Chat(
+    return ChatsTableData(
       id: serializer.fromJson<String>(json['id']),
       name: serializer.fromJson<String?>(json['name']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
@@ -577,7 +579,7 @@ class Chat extends DataClass implements Insertable<Chat> {
     };
   }
 
-  Chat copyWith(
+  ChatsTableData copyWith(
           {String? id,
           Value<String?> name = const Value.absent(),
           DateTime? createdAt,
@@ -587,7 +589,7 @@ class Chat extends DataClass implements Insertable<Chat> {
           Value<String?> lastMessageUserId = const Value.absent(),
           Value<String?> lastMessageType = const Value.absent(),
           Value<DateTime?> lastMessageAt = const Value.absent()}) =>
-      Chat(
+      ChatsTableData(
         id: id ?? this.id,
         name: name.present ? name.value : this.name,
         createdAt: createdAt ?? this.createdAt,
@@ -605,8 +607,8 @@ class Chat extends DataClass implements Insertable<Chat> {
         lastMessageAt:
             lastMessageAt.present ? lastMessageAt.value : this.lastMessageAt,
       );
-  Chat copyWithCompanion(ChatsCompanion data) {
-    return Chat(
+  ChatsTableData copyWithCompanion(ChatsTableCompanion data) {
+    return ChatsTableData(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
@@ -629,7 +631,7 @@ class Chat extends DataClass implements Insertable<Chat> {
 
   @override
   String toString() {
-    return (StringBuffer('Chat(')
+    return (StringBuffer('ChatsTableData(')
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('createdAt: $createdAt, ')
@@ -649,7 +651,7 @@ class Chat extends DataClass implements Insertable<Chat> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Chat &&
+      (other is ChatsTableData &&
           other.id == this.id &&
           other.name == this.name &&
           other.createdAt == this.createdAt &&
@@ -661,7 +663,7 @@ class Chat extends DataClass implements Insertable<Chat> {
           other.lastMessageAt == this.lastMessageAt);
 }
 
-class ChatsCompanion extends UpdateCompanion<Chat> {
+class ChatsTableCompanion extends UpdateCompanion<ChatsTableData> {
   final Value<String> id;
   final Value<String?> name;
   final Value<DateTime> createdAt;
@@ -672,7 +674,7 @@ class ChatsCompanion extends UpdateCompanion<Chat> {
   final Value<String?> lastMessageType;
   final Value<DateTime?> lastMessageAt;
   final Value<int> rowid;
-  const ChatsCompanion({
+  const ChatsTableCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -684,7 +686,7 @@ class ChatsCompanion extends UpdateCompanion<Chat> {
     this.lastMessageAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  ChatsCompanion.insert({
+  ChatsTableCompanion.insert({
     required String id,
     this.name = const Value.absent(),
     required DateTime createdAt,
@@ -699,7 +701,7 @@ class ChatsCompanion extends UpdateCompanion<Chat> {
         createdAt = Value(createdAt),
         updatedAt = Value(updatedAt),
         userIds = Value(userIds);
-  static Insertable<Chat> custom({
+  static Insertable<ChatsTableData> custom({
     Expression<String>? id,
     Expression<String>? name,
     Expression<DateTime>? createdAt,
@@ -725,7 +727,7 @@ class ChatsCompanion extends UpdateCompanion<Chat> {
     });
   }
 
-  ChatsCompanion copyWith(
+  ChatsTableCompanion copyWith(
       {Value<String>? id,
       Value<String?>? name,
       Value<DateTime>? createdAt,
@@ -736,7 +738,7 @@ class ChatsCompanion extends UpdateCompanion<Chat> {
       Value<String?>? lastMessageType,
       Value<DateTime?>? lastMessageAt,
       Value<int>? rowid}) {
-    return ChatsCompanion(
+    return ChatsTableCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
       createdAt: createdAt ?? this.createdAt,
@@ -788,7 +790,7 @@ class ChatsCompanion extends UpdateCompanion<Chat> {
 
   @override
   String toString() {
-    return (StringBuffer('ChatsCompanion(')
+    return (StringBuffer('ChatsTableCompanion(')
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('createdAt: $createdAt, ')
@@ -804,11 +806,12 @@ class ChatsCompanion extends UpdateCompanion<Chat> {
   }
 }
 
-class $MessagesTable extends Messages with TableInfo<$MessagesTable, Message> {
+class $MessagesTableTable extends MessagesTable
+    with TableInfo<$MessagesTableTable, MessagesTableData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $MessagesTable(this.attachedDatabase, [this._alias]);
+  $MessagesTableTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
@@ -863,9 +866,9 @@ class $MessagesTable extends Messages with TableInfo<$MessagesTable, Message> {
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'messages';
+  static const String $name = 'messages_table';
   @override
-  VerificationContext validateIntegrity(Insertable<Message> instance,
+  VerificationContext validateIntegrity(Insertable<MessagesTableData> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -914,9 +917,9 @@ class $MessagesTable extends Messages with TableInfo<$MessagesTable, Message> {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Message map(Map<String, dynamic> data, {String? tablePrefix}) {
+  MessagesTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Message(
+    return MessagesTableData(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
       chatId: attachedDatabase.typeMapping
@@ -937,12 +940,13 @@ class $MessagesTable extends Messages with TableInfo<$MessagesTable, Message> {
   }
 
   @override
-  $MessagesTable createAlias(String alias) {
-    return $MessagesTable(attachedDatabase, alias);
+  $MessagesTableTable createAlias(String alias) {
+    return $MessagesTableTable(attachedDatabase, alias);
   }
 }
 
-class Message extends DataClass implements Insertable<Message> {
+class MessagesTableData extends DataClass
+    implements Insertable<MessagesTableData> {
   final String id;
   final String chatId;
   final String? userId;
@@ -951,7 +955,7 @@ class Message extends DataClass implements Insertable<Message> {
   final String? fileUrl;
   final DateTime createdAt;
   final bool isRead;
-  const Message(
+  const MessagesTableData(
       {required this.id,
       required this.chatId,
       this.userId,
@@ -980,8 +984,8 @@ class Message extends DataClass implements Insertable<Message> {
     return map;
   }
 
-  MessagesCompanion toCompanion(bool nullToAbsent) {
-    return MessagesCompanion(
+  MessagesTableCompanion toCompanion(bool nullToAbsent) {
+    return MessagesTableCompanion(
       id: Value(id),
       chatId: Value(chatId),
       userId:
@@ -998,10 +1002,10 @@ class Message extends DataClass implements Insertable<Message> {
     );
   }
 
-  factory Message.fromJson(Map<String, dynamic> json,
+  factory MessagesTableData.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Message(
+    return MessagesTableData(
       id: serializer.fromJson<String>(json['id']),
       chatId: serializer.fromJson<String>(json['chatId']),
       userId: serializer.fromJson<String?>(json['userId']),
@@ -1027,7 +1031,7 @@ class Message extends DataClass implements Insertable<Message> {
     };
   }
 
-  Message copyWith(
+  MessagesTableData copyWith(
           {String? id,
           String? chatId,
           Value<String?> userId = const Value.absent(),
@@ -1036,7 +1040,7 @@ class Message extends DataClass implements Insertable<Message> {
           Value<String?> fileUrl = const Value.absent(),
           DateTime? createdAt,
           bool? isRead}) =>
-      Message(
+      MessagesTableData(
         id: id ?? this.id,
         chatId: chatId ?? this.chatId,
         userId: userId.present ? userId.value : this.userId,
@@ -1046,8 +1050,8 @@ class Message extends DataClass implements Insertable<Message> {
         createdAt: createdAt ?? this.createdAt,
         isRead: isRead ?? this.isRead,
       );
-  Message copyWithCompanion(MessagesCompanion data) {
-    return Message(
+  MessagesTableData copyWithCompanion(MessagesTableCompanion data) {
+    return MessagesTableData(
       id: data.id.present ? data.id.value : this.id,
       chatId: data.chatId.present ? data.chatId.value : this.chatId,
       userId: data.userId.present ? data.userId.value : this.userId,
@@ -1061,7 +1065,7 @@ class Message extends DataClass implements Insertable<Message> {
 
   @override
   String toString() {
-    return (StringBuffer('Message(')
+    return (StringBuffer('MessagesTableData(')
           ..write('id: $id, ')
           ..write('chatId: $chatId, ')
           ..write('userId: $userId, ')
@@ -1080,7 +1084,7 @@ class Message extends DataClass implements Insertable<Message> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Message &&
+      (other is MessagesTableData &&
           other.id == this.id &&
           other.chatId == this.chatId &&
           other.userId == this.userId &&
@@ -1091,7 +1095,7 @@ class Message extends DataClass implements Insertable<Message> {
           other.isRead == this.isRead);
 }
 
-class MessagesCompanion extends UpdateCompanion<Message> {
+class MessagesTableCompanion extends UpdateCompanion<MessagesTableData> {
   final Value<String> id;
   final Value<String> chatId;
   final Value<String?> userId;
@@ -1101,7 +1105,7 @@ class MessagesCompanion extends UpdateCompanion<Message> {
   final Value<DateTime> createdAt;
   final Value<bool> isRead;
   final Value<int> rowid;
-  const MessagesCompanion({
+  const MessagesTableCompanion({
     this.id = const Value.absent(),
     this.chatId = const Value.absent(),
     this.userId = const Value.absent(),
@@ -1112,7 +1116,7 @@ class MessagesCompanion extends UpdateCompanion<Message> {
     this.isRead = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  MessagesCompanion.insert({
+  MessagesTableCompanion.insert({
     required String id,
     required String chatId,
     this.userId = const Value.absent(),
@@ -1126,7 +1130,7 @@ class MessagesCompanion extends UpdateCompanion<Message> {
         chatId = Value(chatId),
         type = Value(type),
         createdAt = Value(createdAt);
-  static Insertable<Message> custom({
+  static Insertable<MessagesTableData> custom({
     Expression<String>? id,
     Expression<String>? chatId,
     Expression<String>? userId,
@@ -1150,7 +1154,7 @@ class MessagesCompanion extends UpdateCompanion<Message> {
     });
   }
 
-  MessagesCompanion copyWith(
+  MessagesTableCompanion copyWith(
       {Value<String>? id,
       Value<String>? chatId,
       Value<String?>? userId,
@@ -1160,7 +1164,7 @@ class MessagesCompanion extends UpdateCompanion<Message> {
       Value<DateTime>? createdAt,
       Value<bool>? isRead,
       Value<int>? rowid}) {
-    return MessagesCompanion(
+    return MessagesTableCompanion(
       id: id ?? this.id,
       chatId: chatId ?? this.chatId,
       userId: userId ?? this.userId,
@@ -1208,7 +1212,7 @@ class MessagesCompanion extends UpdateCompanion<Message> {
 
   @override
   String toString() {
-    return (StringBuffer('MessagesCompanion(')
+    return (StringBuffer('MessagesTableCompanion(')
           ..write('id: $id, ')
           ..write('chatId: $chatId, ')
           ..write('userId: $userId, ')
@@ -1223,20 +1227,21 @@ class MessagesCompanion extends UpdateCompanion<Message> {
   }
 }
 
-abstract class _$AppDatabase extends GeneratedDatabase {
-  _$AppDatabase(QueryExecutor e) : super(e);
-  $AppDatabaseManager get managers => $AppDatabaseManager(this);
-  late final $UsersTable users = $UsersTable(this);
-  late final $ChatsTable chats = $ChatsTable(this);
-  late final $MessagesTable messages = $MessagesTable(this);
+abstract class _$AppDatabaseImpl extends GeneratedDatabase {
+  _$AppDatabaseImpl(QueryExecutor e) : super(e);
+  $AppDatabaseImplManager get managers => $AppDatabaseImplManager(this);
+  late final $UsersTableTable usersTable = $UsersTableTable(this);
+  late final $ChatsTableTable chatsTable = $ChatsTableTable(this);
+  late final $MessagesTableTable messagesTable = $MessagesTableTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [users, chats, messages];
+  List<DatabaseSchemaEntity> get allSchemaEntities =>
+      [usersTable, chatsTable, messagesTable];
 }
 
-typedef $$UsersTableCreateCompanionBuilder = UsersCompanion Function({
+typedef $$UsersTableTableCreateCompanionBuilder = UsersTableCompanion Function({
   required String id,
   required String email,
   required String username,
@@ -1244,7 +1249,7 @@ typedef $$UsersTableCreateCompanionBuilder = UsersCompanion Function({
   Value<bool> isOnline,
   Value<int> rowid,
 });
-typedef $$UsersTableUpdateCompanionBuilder = UsersCompanion Function({
+typedef $$UsersTableTableUpdateCompanionBuilder = UsersTableCompanion Function({
   Value<String> id,
   Value<String> email,
   Value<String> username,
@@ -1253,8 +1258,9 @@ typedef $$UsersTableUpdateCompanionBuilder = UsersCompanion Function({
   Value<int> rowid,
 });
 
-class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
-  $$UsersTableFilterComposer({
+class $$UsersTableTableFilterComposer
+    extends Composer<_$AppDatabaseImpl, $UsersTableTable> {
+  $$UsersTableTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1277,9 +1283,9 @@ class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
       column: $table.isOnline, builder: (column) => ColumnFilters(column));
 }
 
-class $$UsersTableOrderingComposer
-    extends Composer<_$AppDatabase, $UsersTable> {
-  $$UsersTableOrderingComposer({
+class $$UsersTableTableOrderingComposer
+    extends Composer<_$AppDatabaseImpl, $UsersTableTable> {
+  $$UsersTableTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1302,9 +1308,9 @@ class $$UsersTableOrderingComposer
       column: $table.isOnline, builder: (column) => ColumnOrderings(column));
 }
 
-class $$UsersTableAnnotationComposer
-    extends Composer<_$AppDatabase, $UsersTable> {
-  $$UsersTableAnnotationComposer({
+class $$UsersTableTableAnnotationComposer
+    extends Composer<_$AppDatabaseImpl, $UsersTableTable> {
+  $$UsersTableTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1327,28 +1333,31 @@ class $$UsersTableAnnotationComposer
       $composableBuilder(column: $table.isOnline, builder: (column) => column);
 }
 
-class $$UsersTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $UsersTable,
-    User,
-    $$UsersTableFilterComposer,
-    $$UsersTableOrderingComposer,
-    $$UsersTableAnnotationComposer,
-    $$UsersTableCreateCompanionBuilder,
-    $$UsersTableUpdateCompanionBuilder,
-    (User, BaseReferences<_$AppDatabase, $UsersTable, User>),
-    User,
+class $$UsersTableTableTableManager extends RootTableManager<
+    _$AppDatabaseImpl,
+    $UsersTableTable,
+    UsersTableData,
+    $$UsersTableTableFilterComposer,
+    $$UsersTableTableOrderingComposer,
+    $$UsersTableTableAnnotationComposer,
+    $$UsersTableTableCreateCompanionBuilder,
+    $$UsersTableTableUpdateCompanionBuilder,
+    (
+      UsersTableData,
+      BaseReferences<_$AppDatabaseImpl, $UsersTableTable, UsersTableData>
+    ),
+    UsersTableData,
     PrefetchHooks Function()> {
-  $$UsersTableTableManager(_$AppDatabase db, $UsersTable table)
+  $$UsersTableTableTableManager(_$AppDatabaseImpl db, $UsersTableTable table)
       : super(TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$UsersTableFilterComposer($db: db, $table: table),
+              $$UsersTableTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$UsersTableOrderingComposer($db: db, $table: table),
+              $$UsersTableTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$UsersTableAnnotationComposer($db: db, $table: table),
+              $$UsersTableTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<String> id = const Value.absent(),
             Value<String> email = const Value.absent(),
@@ -1357,7 +1366,7 @@ class $$UsersTableTableManager extends RootTableManager<
             Value<bool> isOnline = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
-              UsersCompanion(
+              UsersTableCompanion(
             id: id,
             email: email,
             username: username,
@@ -1373,7 +1382,7 @@ class $$UsersTableTableManager extends RootTableManager<
             Value<bool> isOnline = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
-              UsersCompanion.insert(
+              UsersTableCompanion.insert(
             id: id,
             email: email,
             username: username,
@@ -1388,19 +1397,22 @@ class $$UsersTableTableManager extends RootTableManager<
         ));
 }
 
-typedef $$UsersTableProcessedTableManager = ProcessedTableManager<
-    _$AppDatabase,
-    $UsersTable,
-    User,
-    $$UsersTableFilterComposer,
-    $$UsersTableOrderingComposer,
-    $$UsersTableAnnotationComposer,
-    $$UsersTableCreateCompanionBuilder,
-    $$UsersTableUpdateCompanionBuilder,
-    (User, BaseReferences<_$AppDatabase, $UsersTable, User>),
-    User,
+typedef $$UsersTableTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabaseImpl,
+    $UsersTableTable,
+    UsersTableData,
+    $$UsersTableTableFilterComposer,
+    $$UsersTableTableOrderingComposer,
+    $$UsersTableTableAnnotationComposer,
+    $$UsersTableTableCreateCompanionBuilder,
+    $$UsersTableTableUpdateCompanionBuilder,
+    (
+      UsersTableData,
+      BaseReferences<_$AppDatabaseImpl, $UsersTableTable, UsersTableData>
+    ),
+    UsersTableData,
     PrefetchHooks Function()>;
-typedef $$ChatsTableCreateCompanionBuilder = ChatsCompanion Function({
+typedef $$ChatsTableTableCreateCompanionBuilder = ChatsTableCompanion Function({
   required String id,
   Value<String?> name,
   required DateTime createdAt,
@@ -1412,7 +1424,7 @@ typedef $$ChatsTableCreateCompanionBuilder = ChatsCompanion Function({
   Value<DateTime?> lastMessageAt,
   Value<int> rowid,
 });
-typedef $$ChatsTableUpdateCompanionBuilder = ChatsCompanion Function({
+typedef $$ChatsTableTableUpdateCompanionBuilder = ChatsTableCompanion Function({
   Value<String> id,
   Value<String?> name,
   Value<DateTime> createdAt,
@@ -1425,8 +1437,9 @@ typedef $$ChatsTableUpdateCompanionBuilder = ChatsCompanion Function({
   Value<int> rowid,
 });
 
-class $$ChatsTableFilterComposer extends Composer<_$AppDatabase, $ChatsTable> {
-  $$ChatsTableFilterComposer({
+class $$ChatsTableTableFilterComposer
+    extends Composer<_$AppDatabaseImpl, $ChatsTableTable> {
+  $$ChatsTableTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1464,9 +1477,9 @@ class $$ChatsTableFilterComposer extends Composer<_$AppDatabase, $ChatsTable> {
       column: $table.lastMessageAt, builder: (column) => ColumnFilters(column));
 }
 
-class $$ChatsTableOrderingComposer
-    extends Composer<_$AppDatabase, $ChatsTable> {
-  $$ChatsTableOrderingComposer({
+class $$ChatsTableTableOrderingComposer
+    extends Composer<_$AppDatabaseImpl, $ChatsTableTable> {
+  $$ChatsTableTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1505,9 +1518,9 @@ class $$ChatsTableOrderingComposer
       builder: (column) => ColumnOrderings(column));
 }
 
-class $$ChatsTableAnnotationComposer
-    extends Composer<_$AppDatabase, $ChatsTable> {
-  $$ChatsTableAnnotationComposer({
+class $$ChatsTableTableAnnotationComposer
+    extends Composer<_$AppDatabaseImpl, $ChatsTableTable> {
+  $$ChatsTableTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1542,28 +1555,31 @@ class $$ChatsTableAnnotationComposer
       column: $table.lastMessageAt, builder: (column) => column);
 }
 
-class $$ChatsTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $ChatsTable,
-    Chat,
-    $$ChatsTableFilterComposer,
-    $$ChatsTableOrderingComposer,
-    $$ChatsTableAnnotationComposer,
-    $$ChatsTableCreateCompanionBuilder,
-    $$ChatsTableUpdateCompanionBuilder,
-    (Chat, BaseReferences<_$AppDatabase, $ChatsTable, Chat>),
-    Chat,
+class $$ChatsTableTableTableManager extends RootTableManager<
+    _$AppDatabaseImpl,
+    $ChatsTableTable,
+    ChatsTableData,
+    $$ChatsTableTableFilterComposer,
+    $$ChatsTableTableOrderingComposer,
+    $$ChatsTableTableAnnotationComposer,
+    $$ChatsTableTableCreateCompanionBuilder,
+    $$ChatsTableTableUpdateCompanionBuilder,
+    (
+      ChatsTableData,
+      BaseReferences<_$AppDatabaseImpl, $ChatsTableTable, ChatsTableData>
+    ),
+    ChatsTableData,
     PrefetchHooks Function()> {
-  $$ChatsTableTableManager(_$AppDatabase db, $ChatsTable table)
+  $$ChatsTableTableTableManager(_$AppDatabaseImpl db, $ChatsTableTable table)
       : super(TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$ChatsTableFilterComposer($db: db, $table: table),
+              $$ChatsTableTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$ChatsTableOrderingComposer($db: db, $table: table),
+              $$ChatsTableTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$ChatsTableAnnotationComposer($db: db, $table: table),
+              $$ChatsTableTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<String> id = const Value.absent(),
             Value<String?> name = const Value.absent(),
@@ -1576,7 +1592,7 @@ class $$ChatsTableTableManager extends RootTableManager<
             Value<DateTime?> lastMessageAt = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
-              ChatsCompanion(
+              ChatsTableCompanion(
             id: id,
             name: name,
             createdAt: createdAt,
@@ -1600,7 +1616,7 @@ class $$ChatsTableTableManager extends RootTableManager<
             Value<DateTime?> lastMessageAt = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
-              ChatsCompanion.insert(
+              ChatsTableCompanion.insert(
             id: id,
             name: name,
             createdAt: createdAt,
@@ -1619,19 +1635,23 @@ class $$ChatsTableTableManager extends RootTableManager<
         ));
 }
 
-typedef $$ChatsTableProcessedTableManager = ProcessedTableManager<
-    _$AppDatabase,
-    $ChatsTable,
-    Chat,
-    $$ChatsTableFilterComposer,
-    $$ChatsTableOrderingComposer,
-    $$ChatsTableAnnotationComposer,
-    $$ChatsTableCreateCompanionBuilder,
-    $$ChatsTableUpdateCompanionBuilder,
-    (Chat, BaseReferences<_$AppDatabase, $ChatsTable, Chat>),
-    Chat,
+typedef $$ChatsTableTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabaseImpl,
+    $ChatsTableTable,
+    ChatsTableData,
+    $$ChatsTableTableFilterComposer,
+    $$ChatsTableTableOrderingComposer,
+    $$ChatsTableTableAnnotationComposer,
+    $$ChatsTableTableCreateCompanionBuilder,
+    $$ChatsTableTableUpdateCompanionBuilder,
+    (
+      ChatsTableData,
+      BaseReferences<_$AppDatabaseImpl, $ChatsTableTable, ChatsTableData>
+    ),
+    ChatsTableData,
     PrefetchHooks Function()>;
-typedef $$MessagesTableCreateCompanionBuilder = MessagesCompanion Function({
+typedef $$MessagesTableTableCreateCompanionBuilder = MessagesTableCompanion
+    Function({
   required String id,
   required String chatId,
   Value<String?> userId,
@@ -1642,7 +1662,8 @@ typedef $$MessagesTableCreateCompanionBuilder = MessagesCompanion Function({
   Value<bool> isRead,
   Value<int> rowid,
 });
-typedef $$MessagesTableUpdateCompanionBuilder = MessagesCompanion Function({
+typedef $$MessagesTableTableUpdateCompanionBuilder = MessagesTableCompanion
+    Function({
   Value<String> id,
   Value<String> chatId,
   Value<String?> userId,
@@ -1654,9 +1675,9 @@ typedef $$MessagesTableUpdateCompanionBuilder = MessagesCompanion Function({
   Value<int> rowid,
 });
 
-class $$MessagesTableFilterComposer
-    extends Composer<_$AppDatabase, $MessagesTable> {
-  $$MessagesTableFilterComposer({
+class $$MessagesTableTableFilterComposer
+    extends Composer<_$AppDatabaseImpl, $MessagesTableTable> {
+  $$MessagesTableTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1688,9 +1709,9 @@ class $$MessagesTableFilterComposer
       column: $table.isRead, builder: (column) => ColumnFilters(column));
 }
 
-class $$MessagesTableOrderingComposer
-    extends Composer<_$AppDatabase, $MessagesTable> {
-  $$MessagesTableOrderingComposer({
+class $$MessagesTableTableOrderingComposer
+    extends Composer<_$AppDatabaseImpl, $MessagesTableTable> {
+  $$MessagesTableTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1722,9 +1743,9 @@ class $$MessagesTableOrderingComposer
       column: $table.isRead, builder: (column) => ColumnOrderings(column));
 }
 
-class $$MessagesTableAnnotationComposer
-    extends Composer<_$AppDatabase, $MessagesTable> {
-  $$MessagesTableAnnotationComposer({
+class $$MessagesTableTableAnnotationComposer
+    extends Composer<_$AppDatabaseImpl, $MessagesTableTable> {
+  $$MessagesTableTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -1756,28 +1777,32 @@ class $$MessagesTableAnnotationComposer
       $composableBuilder(column: $table.isRead, builder: (column) => column);
 }
 
-class $$MessagesTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $MessagesTable,
-    Message,
-    $$MessagesTableFilterComposer,
-    $$MessagesTableOrderingComposer,
-    $$MessagesTableAnnotationComposer,
-    $$MessagesTableCreateCompanionBuilder,
-    $$MessagesTableUpdateCompanionBuilder,
-    (Message, BaseReferences<_$AppDatabase, $MessagesTable, Message>),
-    Message,
+class $$MessagesTableTableTableManager extends RootTableManager<
+    _$AppDatabaseImpl,
+    $MessagesTableTable,
+    MessagesTableData,
+    $$MessagesTableTableFilterComposer,
+    $$MessagesTableTableOrderingComposer,
+    $$MessagesTableTableAnnotationComposer,
+    $$MessagesTableTableCreateCompanionBuilder,
+    $$MessagesTableTableUpdateCompanionBuilder,
+    (
+      MessagesTableData,
+      BaseReferences<_$AppDatabaseImpl, $MessagesTableTable, MessagesTableData>
+    ),
+    MessagesTableData,
     PrefetchHooks Function()> {
-  $$MessagesTableTableManager(_$AppDatabase db, $MessagesTable table)
+  $$MessagesTableTableTableManager(
+      _$AppDatabaseImpl db, $MessagesTableTable table)
       : super(TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$MessagesTableFilterComposer($db: db, $table: table),
+              $$MessagesTableTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$MessagesTableOrderingComposer($db: db, $table: table),
+              $$MessagesTableTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$MessagesTableAnnotationComposer($db: db, $table: table),
+              $$MessagesTableTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<String> id = const Value.absent(),
             Value<String> chatId = const Value.absent(),
@@ -1789,7 +1814,7 @@ class $$MessagesTableTableManager extends RootTableManager<
             Value<bool> isRead = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
-              MessagesCompanion(
+              MessagesTableCompanion(
             id: id,
             chatId: chatId,
             userId: userId,
@@ -1811,7 +1836,7 @@ class $$MessagesTableTableManager extends RootTableManager<
             Value<bool> isRead = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
-              MessagesCompanion.insert(
+              MessagesTableCompanion.insert(
             id: id,
             chatId: chatId,
             userId: userId,
@@ -1829,26 +1854,29 @@ class $$MessagesTableTableManager extends RootTableManager<
         ));
 }
 
-typedef $$MessagesTableProcessedTableManager = ProcessedTableManager<
-    _$AppDatabase,
-    $MessagesTable,
-    Message,
-    $$MessagesTableFilterComposer,
-    $$MessagesTableOrderingComposer,
-    $$MessagesTableAnnotationComposer,
-    $$MessagesTableCreateCompanionBuilder,
-    $$MessagesTableUpdateCompanionBuilder,
-    (Message, BaseReferences<_$AppDatabase, $MessagesTable, Message>),
-    Message,
+typedef $$MessagesTableTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabaseImpl,
+    $MessagesTableTable,
+    MessagesTableData,
+    $$MessagesTableTableFilterComposer,
+    $$MessagesTableTableOrderingComposer,
+    $$MessagesTableTableAnnotationComposer,
+    $$MessagesTableTableCreateCompanionBuilder,
+    $$MessagesTableTableUpdateCompanionBuilder,
+    (
+      MessagesTableData,
+      BaseReferences<_$AppDatabaseImpl, $MessagesTableTable, MessagesTableData>
+    ),
+    MessagesTableData,
     PrefetchHooks Function()>;
 
-class $AppDatabaseManager {
-  final _$AppDatabase _db;
-  $AppDatabaseManager(this._db);
-  $$UsersTableTableManager get users =>
-      $$UsersTableTableManager(_db, _db.users);
-  $$ChatsTableTableManager get chats =>
-      $$ChatsTableTableManager(_db, _db.chats);
-  $$MessagesTableTableManager get messages =>
-      $$MessagesTableTableManager(_db, _db.messages);
+class $AppDatabaseImplManager {
+  final _$AppDatabaseImpl _db;
+  $AppDatabaseImplManager(this._db);
+  $$UsersTableTableTableManager get usersTable =>
+      $$UsersTableTableTableManager(_db, _db.usersTable);
+  $$ChatsTableTableTableManager get chatsTable =>
+      $$ChatsTableTableTableManager(_db, _db.chatsTable);
+  $$MessagesTableTableTableManager get messagesTable =>
+      $$MessagesTableTableTableManager(_db, _db.messagesTable);
 }

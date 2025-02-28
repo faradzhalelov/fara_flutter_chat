@@ -6,9 +6,11 @@ part of 'chats_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$chatRepositoryHash() => r'6fd711ff402fef20407915ff1437b72034e18b37';
+String _$chatRepositoryHash() => r'517ed4c9681c92643cbf8779f1a12d355d030d10';
 
-/// See also [chatRepository].
+/// Provider for the ChatRepository
+///
+/// Copied from [chatRepository].
 @ProviderFor(chatRepository)
 final chatRepositoryProvider = Provider<ChatRepository>.internal(
   chatRepository,
@@ -23,21 +25,5 @@ final chatRepositoryProvider = Provider<ChatRepository>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef ChatRepositoryRef = ProviderRef<ChatRepository>;
-String _$chatsNotifierHash() => r'89ce35c8e24b99d008956ef2a881824a92a49935';
-
-/// See also [ChatsNotifier].
-@ProviderFor(ChatsNotifier)
-final chatsNotifierProvider =
-    AutoDisposeStreamNotifierProvider<ChatsNotifier, List<ChatModel>>.internal(
-  ChatsNotifier.new,
-  name: r'chatsNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$chatsNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$ChatsNotifier = AutoDisposeStreamNotifier<List<ChatModel>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

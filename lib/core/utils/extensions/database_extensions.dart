@@ -1,42 +1,41 @@
 import 'dart:convert';
-import 'package:drift/drift.dart';
 import 'package:fara_chat/data/database/database.dart';
 
-extension UserCompanionExtension on Map<String, dynamic> {
-  UsersCompanion toUserCompanion() => UsersCompanion(
-        id: Value(this['id'] as String),
-        email: Value(this['email'] as String),
-        username: Value(this['username'] as String),
-        avatarUrl: Value(this['avatar_url'] as String?),
-        isOnline: Value(this['is_online'] as bool? ?? false),
+extension UsernExtension on Map<String, dynamic> {
+  User toUser() => User(
+        id: this['id'] as String,
+        email: this['email'] as String,
+        username: this['username'] as String,
+        avatarUrl: this['avatar_url'] as String?,
+        isOnline: this['is_online'] as bool? ?? false,
       );
 }
 
-extension ChatCompanionExtension on Map<String, dynamic> {
-  ChatsCompanion toChatCompanion() => ChatsCompanion(
-        id: Value(this['id'] as String),
-        name: Value(this['name'] as String?),
-        createdAt: Value(DateTime.parse(this['created_at'] as String)),
-        updatedAt: Value(DateTime.parse(this['updated_at'] as String)),
-        userIds: Value(jsonEncode(this['user_ids'])),
-        lastMessageText: Value(this['last_message_text'] as String?),
-        lastMessageUserId: Value(this['last_message_user_id'] as String?),
-        lastMessageType: Value(this['last_message_type'] as String?),
+extension ChatExtension on Map<String, dynamic> {
+  Chat toChat() => Chat(
+        id: this['id'] as String,
+        name: this['name'] as String?,
+        createdAt: DateTime.parse(this['created_at'] as String),
+        updatedAt: DateTime.parse(this['updated_at'] as String),
+        userIds: this['user_ids'] != null ? List<String>.from(jsonEncode(this['user_ids'] ) as List) : <String>[],
+        lastMessageText: this['last_message_text'] as String?,
+        lastMessageUserId: this['last_message_user_id'] as String?,
+        lastMessageType: this['last_message_type'] as String?,
         lastMessageAt: this['last_message_at'] != null
-            ? Value(DateTime.parse(this['last_message_at'] as String))
-            : const Value(null),
+            ? DateTime.parse(this['last_message_at'] as String)
+            : null,
       );
 }
 
-extension MessageCompanionExtension on Map<String, dynamic> {
-  MessagesCompanion toMessageCompanion() => MessagesCompanion(
-        id: Value(this['id'] as String),
-        chatId: Value(this['chat_id'] as String),
-        userId: Value(this['user_id'] as String?),
-        content: Value(this['content'] as String?),
-        type: Value(this['type'] as String),
-        fileUrl: Value(this['file_url'] as String?),
-        isRead: Value(this['is_read'] as bool? ?? false),
-        createdAt: Value(DateTime.parse(this['created_at'] as String)),
+extension MessageExtension on Map<String, dynamic> {
+  Message toMessage() => Message(
+        id: this['id'] as String,
+        chatId: this['chat_id'] as String,
+        userId: this['user_id'] as String?,
+        content: this['content'] as String?,
+        type: this['type'] as String,
+        fileUrl: this['file_url'] as String?,
+        isRead: this['is_read'] as bool? ?? false,
+        createdAt: DateTime.parse(this['created_at'] as String),
       );
 }

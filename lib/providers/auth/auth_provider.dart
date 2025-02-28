@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:fara_chat/core/supabase/supabase_service.dart';
+import 'package:fara_chat/core/utils/extensions/database_extensions.dart';
 import 'package:fara_chat/data/database/database.dart';
 import 'package:fara_chat/presentation/splash/splash_view.dart';
 import 'package:flutter/material.dart';
@@ -221,7 +222,7 @@ Future<User> userProfile(Ref ref) async {
         .eq('id', user.id)
         .single();
 
-    return User.fromJson(response);
+    return response.toUser();
   } catch (e) {
     throw Exception('Failed to load user profile: $e');
   }

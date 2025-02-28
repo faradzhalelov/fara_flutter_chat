@@ -7,7 +7,7 @@ part of 'user_search_provider.dart';
 // **************************************************************************
 
 String _$userSearchNotifierHash() =>
-    r'0977f8487f3ea911e9decd40e37d2dcffc0a808b';
+    r'e9a4d34d5eee1f5f0aaa7abcacc5d16a344ee9e3';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -31,10 +31,10 @@ class _SystemHash {
 }
 
 abstract class _$UserSearchNotifier
-    extends BuildlessAutoDisposeAsyncNotifier<List<UserModel>> {
+    extends BuildlessAutoDisposeAsyncNotifier<List<User>> {
   late final String query;
 
-  FutureOr<List<UserModel>> build(
+  FutureOr<List<User>> build(
     String query,
   );
 }
@@ -44,7 +44,7 @@ abstract class _$UserSearchNotifier
 const userSearchNotifierProvider = UserSearchNotifierFamily();
 
 /// See also [UserSearchNotifier].
-class UserSearchNotifierFamily extends Family<AsyncValue<List<UserModel>>> {
+class UserSearchNotifierFamily extends Family<AsyncValue<List<User>>> {
   /// See also [UserSearchNotifier].
   const UserSearchNotifierFamily();
 
@@ -83,7 +83,7 @@ class UserSearchNotifierFamily extends Family<AsyncValue<List<UserModel>>> {
 
 /// See also [UserSearchNotifier].
 class UserSearchNotifierProvider extends AutoDisposeAsyncNotifierProviderImpl<
-    UserSearchNotifier, List<UserModel>> {
+    UserSearchNotifier, List<User>> {
   /// See also [UserSearchNotifier].
   UserSearchNotifierProvider(
     String query,
@@ -114,7 +114,7 @@ class UserSearchNotifierProvider extends AutoDisposeAsyncNotifierProviderImpl<
   final String query;
 
   @override
-  FutureOr<List<UserModel>> runNotifierBuild(
+  FutureOr<List<User>> runNotifierBuild(
     covariant UserSearchNotifier notifier,
   ) {
     return notifier.build(
@@ -139,7 +139,7 @@ class UserSearchNotifierProvider extends AutoDisposeAsyncNotifierProviderImpl<
   }
 
   @override
-  AutoDisposeAsyncNotifierProviderElement<UserSearchNotifier, List<UserModel>>
+  AutoDisposeAsyncNotifierProviderElement<UserSearchNotifier, List<User>>
       createElement() {
     return _UserSearchNotifierProviderElement(this);
   }
@@ -160,15 +160,14 @@ class UserSearchNotifierProvider extends AutoDisposeAsyncNotifierProviderImpl<
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin UserSearchNotifierRef
-    on AutoDisposeAsyncNotifierProviderRef<List<UserModel>> {
+mixin UserSearchNotifierRef on AutoDisposeAsyncNotifierProviderRef<List<User>> {
   /// The parameter `query` of this provider.
   String get query;
 }
 
 class _UserSearchNotifierProviderElement
     extends AutoDisposeAsyncNotifierProviderElement<UserSearchNotifier,
-        List<UserModel>> with UserSearchNotifierRef {
+        List<User>> with UserSearchNotifierRef {
   _UserSearchNotifierProviderElement(super.provider);
 
   @override

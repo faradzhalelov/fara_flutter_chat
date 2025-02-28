@@ -134,7 +134,7 @@ class MessageBubble extends StatelessWidget {
                     if (isMe) ...[
                       const SizedBox(width: 4),
                       Icon(
-                       message.isRead 
+                       message.isRead ?? false
                         ? Icomoon.read : Icomoon.unread,
                         size: 14,
                         color: AppColors.darkGreen,

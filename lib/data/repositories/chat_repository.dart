@@ -1,46 +1,42 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:developer';
 import 'package:fara_chat/core/supabase/supabase_service.dart';
 import 'package:fara_chat/core/utils/extensions/database_extensions.dart';
 import 'package:fara_chat/data/database/database.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' as supabase_flutter;
 
 class ChatRepository {
-  ChatRepository(this._db);
 
+  ChatRepository(this._db);
   final AppDatabase _db;
 
+  /// Get the current user's ID
   String get currentUserId => supabase.auth.currentUser?.id ?? '';
+  final List<supabase_flutter.RealtimeChannel> _subscriptions = [];
 
-  // Initialize sync process
+  /// Initialize the repository
   Future<void> initialize() async {
     await syncUsers();
     await syncChats();
     setupRealtimeSync();
   }
 
-  // Sync users from Supabase to local DB
+  /// Sync users from Supabase to local DB
   Future<void> syncUsers() async {
     try {
       // Get users from current user's chats
       final response = await supabase.from('users').select();
 
-      // Transform into Drift companions
-      final usersList = response
-          .map<UsersCompanion>(
-            (user) => user.toUserCompanion(),
-          )
-          .toList();
-
-      // Upsert users to local DB
-      await _db.upsertUsers(usersList);
+      // Transform and upsert to local DB
+      for (final user in response) {
+        await _db.upsertUser(user.toUser());
+      }
     } catch (e) {
-      log('Error syncing users: $e');
+      print('Error syncing users: $e');
     }
   }
 
-  // Sync all chats from Supabase to local DB
+  /// Sync all chats from Supabase to local DB
   Future<void> syncChats() async {
     try {
       final userId = currentUserId;
@@ -50,26 +46,21 @@ class ChatRepository {
       final response =
           await supabase.from('chats').select().contains('user_ids', [userId]);
 
-      // Transform into Drift companions
-      final chatsList = response
-          .map<ChatsCompanion>(
-            (chat) => chat.toChatCompanion(),
-          )
-          .toList();
-
-      // Upsert chats to local DB
-      await _db.upsertChats(chatsList);
+      // Transform and upsert to local DB
+      for (final chatData in response) {
+        await _db.upsertChat(chatData.toChat());
+      }
 
       // Sync messages for each chat
       for (final chat in response) {
-        await syncChatMessages(chat['id'] as String);
+        await syncChatMessages(chat['id'] as  String);
       }
     } catch (e) {
-      log('Error syncing chats: $e');
+      print('Error syncing chats: $e');
     }
   }
 
-  // Sync messages for a specific chat
+  /// Sync messages for a specific chat
   Future<void> syncChatMessages(String chatId) async {
     try {
       // Get messages for chat
@@ -79,64 +70,131 @@ class ChatRepository {
           .eq('chat_id', chatId)
           .order('created_at');
 
-      // Transform into Drift companions
-      final messagesList = response
-          .map<MessagesCompanion>(
-            (message) => message.toMessageCompanion(),
-          )
-          .toList();
-
-      // Upsert messages to local DB
-      await _db.upsertMessages(messagesList);
+      // Transform and upsert to local DB
+      for (final messageData in response) {
+        await _db.upsertMessage(messageData.toMessage());
+      }
     } catch (e) {
-      log('Error syncing messages for chat $chatId: $e');
+      print('Error syncing messages for chat $chatId: $e');
     }
   }
 
-  // Set up realtime subscriptions
+  /// Set up realtime subscriptions
   void setupRealtimeSync() {
     final userId = currentUserId;
     if (userId.isEmpty) return;
 
-    // Listen for chat updates
-    final chatChannel = supabase.channel('public:chats');
+    // Create a single channel for both tables
+    final channel = supabase.channel('db-changes');
 
-    chatChannel.onPostgresChanges(
-    event: PostgresChangeEvent.all,
-    schema: 'public',
-    table: 'chats',
-    filter: PostgresChangeFilter(type: PostgresChangeFilterType.inFilter, column: 'user_ids', value: [userId]),
-    callback: (payload) async {
-      if (payload.eventType == PostgresChangeEvent.insert|| payload.eventType == PostgresChangeEvent.update) {
-        final chatData = payload.newRecord;
-        await _db.upsertChat(chatData.toChatCompanion());
-      } else if (payload.eventType == PostgresChangeEvent.delete) {
-        final chatId = payload.oldRecord['id'] as String;
-        await _db.deleteChat(chatId);
-      }
-    },
-  ).subscribe();
+    // Configure the channel for chat changes
+    channel.onPostgresChanges(
+      event: supabase_flutter.PostgresChangeEvent.all,
+      schema: 'public',
+      table: 'chats',
+      filter: supabase_flutter.PostgresChangeFilter(
+        type: supabase_flutter.PostgresChangeFilterType.inFilter,
+        column: 'user_ids',
+        value: [userId],
+      ),
+      callback: (payload) async {
+        if (payload.eventType == supabase_flutter.PostgresChangeEvent.insert || payload.eventType == supabase_flutter.PostgresChangeEvent.update) {
+          final chatData = payload.newRecord;
+          await _db.upsertChat(chatData.toChat());
+        } else if (payload.eventType == supabase_flutter.PostgresChangeEvent.update) {
+          final chatId = payload.oldRecord['id'] as  String;
+          await _db.deleteChat(chatId);
+        }
+      },
+    );
 
-    // Listen for message updates
-    final messageChannel = supabase.channel('public:messages');
-    messageChannel
-        .onPostgresChanges(
-            event: PostgresChangeEvent.insert,
-            callback: (payload) async {
-              final messageData = payload.newRecord;
-              final chatId = messageData['chat_id'] as String;
-              // Check if this message belongs to one of our chats
-              final chat = await _db.getChatById(chatId);
-              if (chat != null) {
-                // Update local DB with new message using a helper conversion function
-                await _db.upsertMessage(messageData.toMessageCompanion());
-              }
-            })
-        .subscribe();
+    // Configure the channel for message changes
+    channel.onPostgresChanges(
+      event: supabase_flutter.PostgresChangeEvent.insert,
+      schema: 'public',
+      table: 'messages',
+      callback: (payload) async {
+        final messageData = payload.newRecord;
+        final chatId = messageData['chat_id'] as String;
+
+        // Check if this message belongs to one of our chats
+        final chat = await _db.getChatById(chatId);
+        if (chat != null) {
+          // Update local DB with new message
+          await _db.upsertMessage(messageData.toMessage());
+        }
+      },
+    );
+
+    // Subscribe to the channel
+    final subscription = channel.subscribe();
+    _subscriptions.add(subscription);
   }
 
-  // Create a new chat
-  Future<String> createChat(List<String> userIds, {String? name}) async {
+  /// Get all chats for the current user from local database
+  Future<List<Chat>> getChats() async {
+    try {
+      return await _db.getAllChats();
+    } catch (e) {
+      log('Error getting chats: $e');
+      return [];
+    }
+  }
+
+  /// Watch chats for changes (returns a stream)
+  Stream<List<Chat>> watchChats() => _db.watchAllChats();
+
+  /// Get a specific chat by ID
+  Future<Chat?> getChatById(String chatId) async => _db.getChatById(chatId);
+
+  /// Get user IDs for a chat
+  Future<List<String>> getChatUserIds(String chatId) async {
+    final chat = await _db.getChatById(chatId);
+    return chat?.userIds ?? [];
+  }
+
+  /// Get a user by ID
+  Future<User?> getUserById(String userId) async => _db.getUserById(userId);
+
+  /// Search users by username or email
+  Future<List<User>> searchUsers(String query) async {
+    try {
+      final currentId = currentUserId;
+      if (query.isEmpty) return [];
+
+      // Search from Supabase
+      final response = await supabase
+          .from('users')
+          .select()
+          .neq('id', currentId)
+          .or('username.ilike.%$query%,email.ilike.%$query%')
+          .limit(20);
+
+      // Convert to User models
+      final users = response
+          .map<User>((userData) => User(
+                id: userData['id'] as String,
+                email: userData['email'] as String ,
+                username: userData['username'] as String,
+                avatarUrl: userData['avatar_url'] as String?,
+                isOnline: userData['is_online'] as bool? ?? false,
+              ))
+          .toList();
+
+      // Also save to local database
+      for (final user in users) {
+        await _db.upsertUser(user);
+      }
+
+      return users;
+    } catch (e) {
+      log('Error searching users: $e');
+      throw Exception('Failed to search users: $e');
+    }
+  }
+
+  /// Create a new chat with selected users
+  Future<String> createChat(List<String> userIds) async {
     final userId = currentUserId;
     if (userId.isEmpty) throw Exception('User not authenticated');
 
@@ -145,29 +203,61 @@ class ChatRepository {
       userIds.add(userId);
     }
 
-    // Create chat in Supabase
-    final response = await supabase
-        .from('chats')
-        .insert({
-          'user_ids': userIds,
-          'name': name,
-        })
-        .select('id')
-        .single();
+    // Check if chat already exists (for direct chats)
+    if (userIds.length == 2) {
+      final existingChats = await _db.getAllChats();
+      for (final chat in existingChats) {
+        final chatUserIds = chat.userIds;
+        if (chatUserIds.length == 2 &&
+            chatUserIds.contains(userIds[0]) &&
+            chatUserIds.contains(userIds[1])) {
+          return chat.id;
+        }
+      }
+    }
 
-    final chatId = response['id'] as String;
+    try {
+      // Create chat in Supabase
+      final response = await supabase
+          .from('chats')
+          .insert({
+            'user_ids': userIds,
+            'name': null, // Direct chats typically don't have names
+          })
+          .select('id')
+          .single();
 
-    // Get full chat data
-    final chatData =
-        await supabase.from('chats').select().eq('id', chatId).single();
+      final chatId = response['id'] as String;
 
-    // Store in local DB
-    await _db.upsertChat(chatData.toChatCompanion());
+      // Get full chat data
+      final chatData =
+          await supabase.from('chats').select().eq('id', chatId).single();
 
-    return chatId;
+      // Store in local DB
+      await _db.upsertChat(chatData.toChat());
+
+      return chatId;
+    } catch (e) {
+      log('Error creating chat: $e');
+      throw Exception('Failed to create chat: $e');
+    }
   }
 
-  // Send a message
+  /// Delete a chat
+  Future<void> deleteChat(String chatId) async {
+    try {
+      // Delete from Supabase
+      await supabase.from('chats').delete().eq('id', chatId);
+
+      // Delete from local DB
+      await _db.deleteChat(chatId);
+    } catch (e) {
+      log('Error deleting chat: $e');
+      throw Exception('Failed to delete chat: $e');
+    }
+  }
+
+  /// Send a message
   Future<void> sendMessage({
     required String chatId,
     required String content,
@@ -177,66 +267,33 @@ class ChatRepository {
     final userId = currentUserId;
     if (userId.isEmpty) throw Exception('User not authenticated');
 
-    // Create message in Supabase
-    final response = await supabase
-        .from('messages')
-        .insert({
-          'chat_id': chatId,
-          'user_id': userId,
-          'content': content,
-          'type': type,
-          'file_url': fileUrl,
-        })
-        .select()
-        .single();
+    try {
+      // Create message in Supabase
+      final response = await supabase
+          .from('messages')
+          .insert({
+            'chat_id': chatId,
+            'user_id': userId,
+            'content': content,
+            'type': type,
+            'file_url': fileUrl,
+          })
+          .select()
+          .single();
 
-    // Store in local DB
-    await _db.upsertMessage(response.toMessageCompanion());
+      // Update local DB
+      await _db.upsertMessage(response.toMessage());
+    } catch (e) {
+      log('Error sending message: $e');
+      throw Exception('Failed to send message: $e');
+    }
   }
 
-  // Get user info
-  Future<Map<String, dynamic>> getChatUserInfo(String chatId) async {
-    final userId = currentUserId;
-    final chat = await _db.getChatById(chatId);
-
-    if (chat == null) {
-      throw Exception('Chat not found');
-    }
-
-    // Parse user IDs
-    final userIdsList = json.decode(chat.userIds) as List;
-
-    // For direct chats, get the other user's info
-    if (userIdsList.length == 2) {
-      final otherUserId = userIdsList.firstWhere(
-        (id) => id != userId,
-        orElse: () => userId,
-      );
-
-      final otherUser = await _db.getUserById(otherUserId as String);
-
-      if (otherUser != null) {
-        return {
-          'name': chat.name ?? otherUser.username,
-          'avatar_url': otherUser.avatarUrl,
-          'is_online': otherUser.isOnline,
-          'other_user_id': otherUserId,
-        };
-      }
-    }
-
-    // For group chats or if other user not found
-    return {
-      'name': chat.name ?? 'Chat',
-      'avatar_url': null,
-      'is_online': false,
-      'other_user_id': null,
-    };
-  }
-
-  // Clean up subscriptions
+  /// Clean up resources
   void dispose() {
-    supabase.channel('public:messages').unsubscribe();
-    supabase.channel('public:chats').unsubscribe();
+    for (final subscription in _subscriptions) {
+      subscription.unsubscribe();
+    }
+    _subscriptions.clear();
   }
 }
