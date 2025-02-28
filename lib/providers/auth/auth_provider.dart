@@ -39,7 +39,7 @@ class AuthNotifier extends _$AuthNotifier {
         'is_online': true,
       }).eq('id', Supabase.instance.client.auth.currentUser!.id);
       
-      _refreshState();
+      await _refreshState();
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
     }
@@ -62,7 +62,7 @@ class AuthNotifier extends _$AuthNotifier {
         'username': username,
       });
       
-      _refreshState();
+      await _refreshState();
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
     }
