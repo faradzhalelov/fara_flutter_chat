@@ -70,6 +70,6 @@ class ChatsNotifier extends _$ChatsNotifier {
   
   Future<String> createChat(List<String> userIds, {String? name}) async {
     final repository = ref.read(chatRepositoryProvider);
-    return await repository.createChat(userIds, name: name);
+    return repository.createChat(userIds, name: name);
   }
 }
