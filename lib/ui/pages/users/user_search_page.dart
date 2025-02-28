@@ -1,5 +1,8 @@
 import 'package:fara_chat/data/models/user_model.dart';
 import 'package:fara_chat/providers/users/user_search_provider.dart';
+import 'package:fara_chat/ui/widgets/common/error_view.dart';
+import 'package:fara_chat/ui/widgets/common/loading_indicator.dart';
+import 'package:fara_chat/ui/widgets/common/user_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

@@ -2,6 +2,10 @@ import 'package:fara_chat/data/models/chat_model.dart';
 import 'package:fara_chat/providers/auth/auth_provider.dart';
 import 'package:fara_chat/providers/chats/chat_info_provider.dart';
 import 'package:fara_chat/providers/chats/chats_provider.dart';
+import 'package:fara_chat/ui/widgets/chat/empty_chat_list.dart';
+import 'package:fara_chat/ui/widgets/common/error_view.dart';
+import 'package:fara_chat/ui/widgets/common/loading_indicator.dart';
+import 'package:fara_chat/ui/widgets/common/user_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -151,8 +155,8 @@ class ChatListItem extends ConsumerWidget {
     return chatInfoAsync.when(
       data: (chatInfo) {
         final displayName = chatInfo['name'] as String? ?? 'Chat';
-        final avatarUrl = chatInfo['avatar_url'];
-        final isOnline = chatInfo['is_online'] ?? false;
+        final avatarUrl = chatInfo['avatar_url'] as String?;
+        final isOnline = chatInfo['is_online']  as bool? ?? false;
         
         return ListTile(
           leading: UserAvatar(

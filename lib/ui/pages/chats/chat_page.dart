@@ -1,10 +1,14 @@
 import 'package:fara_chat/providers/chats/chat_info_provider.dart';
 import 'package:fara_chat/providers/messages/chat_messages_provider.dart';
+import 'package:fara_chat/ui/widgets/chat/chat_bubble.dart';
+import 'package:fara_chat/ui/widgets/chat/message_input.dart';
+import 'package:fara_chat/ui/widgets/common/error_view.dart';
+import 'package:fara_chat/ui/widgets/common/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ChatPage extends ConsumerStatefulWidget {
-  const ChatPage({Key? key}) : super(key: key);
+  const ChatPage({super.key});
 
   @override
   ConsumerState<ChatPage> createState() => _ChatPageState();
