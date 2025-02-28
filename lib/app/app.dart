@@ -1,12 +1,15 @@
 // lib/app.dart
 import 'dart:async';
 
+import 'package:fara_chat/app/lifecycle/app_lifecycle.dart';
 import 'package:fara_chat/app/theme/icons.dart';
 import 'package:fara_chat/app/theme/text_styles.dart';
+import 'package:fara_chat/app/theme/theme.dart';
 import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});

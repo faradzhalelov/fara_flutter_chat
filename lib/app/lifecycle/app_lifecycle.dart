@@ -1,6 +1,7 @@
 // lib/core/lifecycle/app_lifecycle_manager.dart
 import 'dart:developer';
 
+import 'package:fara_chat/core/supabase/supabase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -34,7 +35,7 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager> with 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     // Get current authenticated user
-    final user = ref.read(currentUserProvider);
+    final user = supabase.auth.currentUser;
     
     if (user != null) {
       // Update user status based on app lifecycle
@@ -55,7 +56,7 @@ class _AppLifecycleManagerState extends ConsumerState<AppLifecycleManager> with 
 Future<void> _updateUserStatus(bool isOnline) async {
   try {
     // Get current authenticated user
-    final user = ref.read(currentUserProvider);
+    final user = supabase.auth.currentUser;
     
     if (user != null) {
       await Supabase.instance.client
