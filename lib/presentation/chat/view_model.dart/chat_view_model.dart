@@ -28,7 +28,11 @@ class ChatViewModel extends _$ChatViewModel {
     _chatRepository = ref.read(chatRepositoryProvider);
     // Clean up resources when the provider is disposed
     ref.onDispose(() {
-      _audioRecorder.dispose();
+      try {
+        _audioRecorder.dispose();
+      } catch (e) {
+        log('dispose error:$e');
+      }
     });
   }
 

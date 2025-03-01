@@ -1,3 +1,4 @@
+
 import 'package:fara_chat/app/theme/colors.dart';
 import 'package:fara_chat/app/theme/icons.dart';
 import 'package:fara_chat/app/theme/text_styles.dart';
@@ -25,9 +26,8 @@ class ChatListItem extends StatelessWidget {
     final chat = chatUser.$1;
     final user = chatUser.$2;
     // Determine avatar color index based on the first letter of the name
-    final colorIndex = user.username.isNotEmpty
-        ? user.username.codeUnitAt(0) % 3
-        : 0;
+    final colorIndex =
+        user.username.isNotEmpty ? user.username.codeUnitAt(0) % 3 : 0;
     final userId = supabase.auth.currentUser?.id;
     return Dismissible(
       key: Key('chat_${chat.id}'),
@@ -102,16 +102,19 @@ class ChatListItem extends StatelessWidget {
                                 ),
                               ),
                             if (chat.lastMessageText != null)
-                            Expanded(
-                              child: Text(
-                                _getMessagePreview(
-                                    MessageType.values.byName(chat.lastMessageType!), chat.lastMessageText,),
-                                style: AppTextStyles.extraSmall
-                                    .copyWith(color: AppColors.darkGray),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+                              Expanded(
+                                child: Text(
+                                  _getMessagePreview(
+                                    MessageType.values
+                                        .byName(chat.lastMessageType!),
+                                    chat.lastMessageText,
+                                  ),
+                                  style: AppTextStyles.extraSmall
+                                      .copyWith(color: AppColors.darkGray),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                            ),
                           ],
                         ),
                       ],
@@ -147,9 +150,8 @@ class ChatListItem extends StatelessWidget {
 
   String _formatTime(DateTime? time) {
     if (time == null) return '';
-
     final now = DateTime.now().toUtc();
-    final difference = time.difference(now);
+    final difference = now.difference(time);
     // For very recent times (less than 1 hour ago)
     if (difference.inHours < 1) {
       final minutes = difference.inMinutes;

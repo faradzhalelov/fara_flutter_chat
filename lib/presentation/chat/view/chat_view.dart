@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:fara_chat/app/theme/colors.dart';
 import 'package:fara_chat/app/theme/icons.dart';
 import 'package:fara_chat/app/theme/text_styles.dart';
@@ -37,6 +39,10 @@ class _ChatViewState extends ConsumerState<ChatView> {
   void initState() {
     super.initState();
     viewModel = ref.read(chatViewModelProvider(chatId).notifier);
+     // Add listener to scroll controller to debug scrolling issues
+    _scrollController.addListener(() {
+      log("Scroll position: ${_scrollController.position.pixels} / ${_scrollController.position.maxScrollExtent}");
+    });
   }
 
   @override
@@ -46,12 +52,22 @@ class _ChatViewState extends ConsumerState<ChatView> {
   }
 
   void _scrollToBottom() {
+    // Only attempt scroll if we have clients and a valid position
     if (_scrollController.hasClients) {
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOut,
-      );
+      log("Attempting to scroll to bottom");
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        try {
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          );
+        } catch (e) {
+          log("Error scrolling: $e");
+        }
+      });
+    } else {
+      log("Scroll controller has no clients yet");
     }
   }
 

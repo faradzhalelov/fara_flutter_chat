@@ -6,7 +6,7 @@ part of 'messages_view_model.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$messagesViewModelHash() => r'b6823d61bd57bc264a744a1485123f28c1494ee0';
+String _$messagesViewModelHash() => r'4bd9f26886bd9a5a529580705d784fed431eeb7e';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,7 +30,7 @@ class _SystemHash {
 }
 
 abstract class _$MessagesViewModel
-    extends BuildlessAutoDisposeAsyncNotifier<List<Message>> {
+    extends BuildlessAsyncNotifier<List<Message>> {
   late final String chatId;
 
   FutureOr<List<Message>> build(
@@ -81,8 +81,8 @@ class MessagesViewModelFamily extends Family<AsyncValue<List<Message>>> {
 }
 
 /// See also [MessagesViewModel].
-class MessagesViewModelProvider extends AutoDisposeAsyncNotifierProviderImpl<
-    MessagesViewModel, List<Message>> {
+class MessagesViewModelProvider
+    extends AsyncNotifierProviderImpl<MessagesViewModel, List<Message>> {
   /// See also [MessagesViewModel].
   MessagesViewModelProvider(
     String chatId,
@@ -138,7 +138,7 @@ class MessagesViewModelProvider extends AutoDisposeAsyncNotifierProviderImpl<
   }
 
   @override
-  AutoDisposeAsyncNotifierProviderElement<MessagesViewModel, List<Message>>
+  AsyncNotifierProviderElement<MessagesViewModel, List<Message>>
       createElement() {
     return _MessagesViewModelProviderElement(this);
   }
@@ -159,15 +159,14 @@ class MessagesViewModelProvider extends AutoDisposeAsyncNotifierProviderImpl<
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin MessagesViewModelRef
-    on AutoDisposeAsyncNotifierProviderRef<List<Message>> {
+mixin MessagesViewModelRef on AsyncNotifierProviderRef<List<Message>> {
   /// The parameter `chatId` of this provider.
   String get chatId;
 }
 
 class _MessagesViewModelProviderElement
-    extends AutoDisposeAsyncNotifierProviderElement<MessagesViewModel,
-        List<Message>> with MessagesViewModelRef {
+    extends AsyncNotifierProviderElement<MessagesViewModel, List<Message>>
+    with MessagesViewModelRef {
   _MessagesViewModelProviderElement(super.provider);
 
   @override

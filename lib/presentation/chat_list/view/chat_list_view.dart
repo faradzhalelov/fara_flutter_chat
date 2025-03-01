@@ -178,7 +178,7 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
               final aTime = chatA.lastMessageAt;
               final bTime = chatB.lastMessageAt;
               if (aTime != null && bTime != null) {
-                return aTime.compareTo(bTime);
+                return bTime.compareTo(aTime);
               } else if (aTime != null && bTime == null) {
                 return 1;
               } else if (aTime == null && bTime != null) {

@@ -10,7 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'messages_view_model.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class MessagesViewModel extends _$MessagesViewModel {
   late final ChatRepository _chatRepository;
   StreamSubscription<dynamic>? _messagesSubscription;
