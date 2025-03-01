@@ -10,6 +10,7 @@ import 'package:fara_chat/core/supabase/supabase_service.dart';
 import 'package:fara_chat/data/database/database.dart';
 import 'package:fara_chat/data/models/message_type.dart';
 import 'package:fara_chat/presentation/chat/components/message/audio_message.dart';
+import 'package:fara_chat/presentation/chat/components/message/file_message.dart';
 import 'package:fara_chat/presentation/chat/components/message/video_message.dart';
 import 'package:flutter/material.dart';
 
@@ -128,9 +129,11 @@ class MessageBubble extends StatelessWidget {
                  
                   : kNothing,
               MessageType.file => message.fileUrl != null
-                  ? Container(
-                      child: Text('file'),
-                    )
+                  ? TelegramStyleFileWidget(
+  fileUrl: message.fileUrl!,
+  fileName: 'файл',
+)
+
                   : kNothing,
               MessageType.audio => message.fileUrl != null
                   ? 
