@@ -163,4 +163,4 @@ Simple flutter chat app (Supabase && drift)
     - https://drive.google.com/file/d/1T-BIZFkN4zAnYGUuAf_GyzrEhuBgzhYA/view?usp=sharing
 
 ### Video Preview
-    - 
+    - https://drive.google.com/file/d/1yDCIzH537d1Uy1vN_3UbCNGNlZhYL5Kl/view?usp=sharing
