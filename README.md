@@ -157,19 +157,15 @@ Simple flutter chat app (Supabase && drift)
 
 
 ### Build Release apk
-    - flutter build apk --release --build-name=0.0.1 --build-number=20250301
+    - flutter build apk --release --build-name=0.0.2 --build-number=20250302
 
 ### Apk Download
     Github:
-    - https://github.com/faradzhalelov/fara_flutter_chat/releases/tag/0.0.1
+    - https://github.com/faradzhalelov/fara_flutter_chat/releases/tag/0.0.2
     Google Drive:
-    - https://drive.google.com/file/d/1T-BIZFkN4zAnYGUuAf_GyzrEhuBgzhYA/view?usp=sharing
+    - https://drive.google.com/file/d/18FtDRkVIR08zFI69J5bj4IHD5VGPTaKb/view?usp=sharing
 
 ### Video Preview
 
     Google Drive:
     - https://drive.google.com/file/d/1yDCIzH537d1Uy1vN_3UbCNGNlZhYL5Kl/view?usp=sharing
-
-<video width="640" height="360" controls>
-  <source src="https://raw.githubusercontent.com/faradzhalelov/fara_flutter_chat/main/Screen%20Recording%202025-03-01%20at%2016.57.02.mp4" type="video/mp4">
-</video>
