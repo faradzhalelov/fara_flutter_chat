@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'package:fara_chat/app/theme/icons.dart';
 import 'package:fara_chat/app/theme/text_styles.dart';
 import 'package:fara_chat/core/utils/extensions/database_extensions.dart';
-import 'package:fara_chat/data/database/database.dart';
 import 'package:fara_chat/presentation/auth/view/login_view.dart';
 import 'package:fara_chat/presentation/auth/view/register_view.dart';
 import 'package:fara_chat/presentation/chat/view/chat_view.dart';

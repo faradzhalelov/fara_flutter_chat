@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:fara_chat/core/supabase/supabase_service.dart';
 import 'package:fara_chat/core/utils/extensions/database_extensions.dart';
 import 'package:fara_chat/data/database/database.dart';
+import 'package:fara_chat/data/models/message_type.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase_flutter;
 
 class ChatRepository {
@@ -141,6 +142,20 @@ class ChatRepository {
     }
   }
 
+    /// Get all messages for the current user from local database
+  Future<List<Message>> getMessages(String chatId) async {
+    try {
+      return await _db.getChatMessages(chatId);
+    } catch (e) {
+      log('Error getting chats: $e');
+      return [];
+    }
+  }
+
+    /// Watch messages for changes (returns a stream)
+  Stream<List<Message>> watchMessages(String chatId) => _db.watchChatMessages(chatId);
+
+
   /// Watch chats for changes (returns a stream)
   Stream<List<Chat>> watchChats() => _db.watchAllChats();
 
@@ -261,7 +276,7 @@ class ChatRepository {
   Future<void> sendMessage({
     required String chatId,
     required String content,
-    String type = 'text',
+    MessageType type = MessageType.text,
     String? fileUrl,
   }) async {
     final userId = currentUserId;
@@ -275,7 +290,7 @@ class ChatRepository {
             'chat_id': chatId,
             'user_id': userId,
             'content': content,
-            'type': type,
+            'type': type.name,
             'file_url': fileUrl,
           })
           .select()
@@ -296,4 +311,5 @@ class ChatRepository {
     }
     _subscriptions.clear();
   }
+  
 }

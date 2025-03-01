@@ -7,6 +7,7 @@ import 'package:fara_chat/presentation/chat/components/message/date_separator.da
 import 'package:fara_chat/presentation/chat/components/message/message_bubble.dart';
 import 'package:fara_chat/presentation/chat/components/message/message_input.dart';
 import 'package:fara_chat/presentation/chat/view_model.dart/chat_view_model.dart';
+import 'package:fara_chat/presentation/chat/view_model.dart/messages_view_model.dart';
 import 'package:fara_chat/presentation/widgets/user_avatar.dart';
 import 'package:flutter/material.dart';
 
@@ -36,10 +37,6 @@ class _ChatViewState extends ConsumerState<ChatView> {
   void initState() {
     super.initState();
     viewModel = ref.read(chatViewModelProvider(chatId).notifier);
-    // Mark messages as read when screen opens
-    Future.microtask(() {
-      viewModel.markMessagesAsRead();
-    });
   }
 
   @override
@@ -60,8 +57,7 @@ class _ChatViewState extends ConsumerState<ChatView> {
 
   @override
   Widget build(BuildContext context) {
-    //TODO:
-    final messagesStream = AsyncValue.data(<Message>[]);
+    final messagesStream = ref.watch(messagesViewModelProvider(chatId));
     final userId = supabase.auth.currentUser?.id;
     return Scaffold(
       backgroundColor: AppColors.appBackground,

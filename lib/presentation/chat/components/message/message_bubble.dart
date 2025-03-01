@@ -5,6 +5,7 @@ import 'package:fara_chat/app/theme/colors.dart';
 import 'package:fara_chat/app/theme/icons.dart';
 import 'package:fara_chat/app/theme/text_styles.dart';
 import 'package:fara_chat/app/theme/theme.dart';
+import 'package:fara_chat/core/constants/ui_constants.dart';
 import 'package:fara_chat/core/supabase/supabase_service.dart';
 import 'package:fara_chat/data/database/database.dart';
 import 'package:fara_chat/data/models/message_type.dart';
@@ -57,7 +58,7 @@ class MessageBubble extends StatelessWidget {
     final bubbleTheme = AppTheme.messageBubbleTheme;
     final userId = supabase.auth.currentUser?.id;
     final isMe = message.userId == userId;
-
+    final messageType =MessageType.values.byName(message.type);
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
@@ -81,21 +82,17 @@ class MessageBubble extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           //mainAxisSize: MainAxisSize.min,
           children: [
-            // Text message
-            if (message.content != null && message.content!.isNotEmpty)
-              _buildTextWithWidth(
+            switch (messageType) {
+                MessageType.text => message.content != null && message.content!.isNotEmpty ? 
+                _buildTextWithWidth(
                 message.content ?? ', ',
                 AppTextStyles.small.copyWith(
                   color: isMe
                       ? bubbleTheme.myMessageTextColor
                       : bubbleTheme.otherMessageTextColor,
                 ),
-              ),
-
-            // Image attachment
-            if (MessageType.values.byName(message.type) == MessageType.image &&
-                message.fileUrl != null)
-              Padding(
+              ): kNothing,
+                MessageType.image => message.fileUrl != null ? Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
@@ -113,8 +110,21 @@ class MessageBubble extends StatelessWidget {
                     ),
                   ),
                 ),
-              ),
-
+              ): kNothing,
+                MessageType.video =>message.fileUrl != null ? Container(
+                  child: Text('video'),
+                ): kNothing,
+                MessageType.file => message.fileUrl != null ?
+                Container(
+                  child: Text('file'),
+                ) : kNothing,
+                MessageType.audio => message.fileUrl != null ?
+                  Container(
+                  child: Text('audio'),
+                )
+                 : kNothing,
+              },
+           
             // Time and read status
             ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 50),
