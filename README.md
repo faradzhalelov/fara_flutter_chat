@@ -166,9 +166,7 @@ Simple flutter chat app (Supabase && drift)
     - https://drive.google.com/file/d/1T-BIZFkN4zAnYGUuAf_GyzrEhuBgzhYA/view?usp=sharing
 
 ### Video Preview
-    <video width="640" height="360" controls>
-    <source src="https://raw.githubusercontent.com/faradzhalelov/fara_flutter_chat/main/Screen%20Recording%202025-03-01%20at%2016.57.02.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-    </video>
+    <video src="https://raw.githubusercontent.com/faradzhalelov/fara_flutter_chat/main/Screen%20Recording%202025-03-01%20at%2016.57.02.mp4" width="640" height="360" controls></video>
+
     Google Drive:
     - https://drive.google.com/file/d/1yDCIzH537d1Uy1vN_3UbCNGNlZhYL5Kl/view?usp=sharing
