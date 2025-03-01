@@ -11,6 +11,7 @@ import 'package:fara_chat/data/database/database.dart';
 import 'package:fara_chat/data/models/message_type.dart';
 import 'package:fara_chat/presentation/chat/components/message/audio_message.dart';
 import 'package:fara_chat/presentation/chat/components/message/file_message.dart';
+import 'package:fara_chat/presentation/chat/components/message/image_message.dart';
 import 'package:fara_chat/presentation/chat/components/message/video_message.dart';
 import 'package:flutter/material.dart';
 
@@ -98,26 +99,11 @@ class MessageBubble extends StatelessWidget {
                       )
                     : kNothing,
               MessageType.image => message.fileUrl != null
-                  ? Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.file(
-                          File(message.fileUrl!),
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                          errorBuilder: (context, error, stackTrace) =>
-                              Container(
-                            height: 150,
-                            color: Colors.grey[300],
-                            child: const Center(
-                              child: Icon(Icons.image_not_supported,
-                                  color: Colors.grey),
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
+                  ? 
+                  TelegramStyleImageWidget(
+  imageUrl: message.fileUrl!,
+  
+)
                   : kNothing,
               MessageType.video => message.fileUrl != null
                   ? 

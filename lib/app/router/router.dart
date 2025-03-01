@@ -6,10 +6,12 @@ import 'package:fara_chat/app/theme/text_styles.dart';
 import 'package:fara_chat/core/utils/extensions/database_extensions.dart';
 import 'package:fara_chat/presentation/auth/view/login_view.dart';
 import 'package:fara_chat/presentation/auth/view/register_view.dart';
+import 'package:fara_chat/presentation/chat/components/message/image_message.dart';
 import 'package:fara_chat/presentation/chat/view/chat_view.dart';
 import 'package:fara_chat/presentation/chat_list/view/chat_list_view.dart';
 import 'package:fara_chat/presentation/profile/view/profile_view.dart';
 import 'package:fara_chat/presentation/splash/splash_view.dart';
+// Import your fullscreen view widget file. Adjust the path as needed.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -22,62 +24,86 @@ final navigatorKey = GlobalKey<NavigatorState>();
 /// Router configuration for the app using GoRouter
 @riverpod
 GoRouter appRouter(Ref ref) => GoRouter(
-    initialLocation: '/${SplashView.routePath}',
-    debugLogDiagnostics: true,
-    navigatorKey: navigatorKey,
-    observers: [
-      MyNavigatorObserver(),
-    ],
+      initialLocation: '/${SplashView.routePath}',
+      debugLogDiagnostics: true,
+      navigatorKey: navigatorKey,
+      observers: [
+        MyNavigatorObserver(),
+      ],
+      // Error handling
+      errorBuilder: (context, state) => ErrorView(state),
+      // Define routes
+      routes: [
+        // Splash screen route - always accessible
+        GoRoute(
+          path: '/${SplashView.routePath}',
+          builder: (context, state) => const SplashView(),
+        ),
 
-    // Error handling
-    errorBuilder: (context, state) => ErrorView(state),
+        // Authentication routes
+        GoRoute(
+          path: '/${LoginView.routePath}',
+          builder: (context, state) => const LoginView(),
+        ),
+        GoRoute(
+          path: '/${RegisterView.routePath}',
+          builder: (context, state) => const RegisterView(),
+        ),
 
-    // Define routes
-    routes: [
-      // Splash screen route - always accessible
-      GoRoute(
-        path: '/${SplashView.routePath}',
-        builder: (context, state) => const SplashView(),
-      ),
+        // Main app routes
+        GoRoute(
+          path: '/',
+          builder: (context, state) => const ChatListView(),
+        ),
+        GoRoute(
+          path: '/${ChatView.routePath}/:chatId',
+          builder: (context, state) {
+            final pathParameters = state.pathParameters;
+            final extra = state.extra as Map<String, dynamic>?;
+            final chatId = pathParameters['chatId']!;
+            final otherUser = extra?['otherUser'] as Map<String, dynamic>?;
+            return ChatView(
+              chatId: chatId,
+              otherUser: otherUser?.toUser(),
+            );
+          },
+        ),
+        GoRoute(
+          path: '/${ProfileView.routePath}',
+          builder: (context, state) => const ProfileView(),
+        ),
 
-      // Authentication routes
-      GoRoute(
-        path: '/${LoginView.routePath}',
-        builder: (context, state) => const LoginView(),
-      ),
-      GoRoute(
-        path: '/${RegisterView.routePath}',
-        builder: (context, state) => const RegisterView(),
-      ),
-
-      // Main app routes
-      GoRoute(
-        path: '/',
-        builder: (context, state) => const ChatListView(),
-      ),
-      GoRoute(
-        
-        path: '/${ChatView.routePath}/:chatId',
-        builder: (context, state) {
-          final pathParameters = state.pathParameters;
-          final extra = state.extra as Map<String, dynamic>?;
-          final chatId = pathParameters['chatId']!;
-          final otherUser = extra?['otherUser'] as Map<String,dynamic>?;
-          return ChatView(chatId: chatId, otherUser: otherUser?.toUser(),);
-        },
-      ),
-      GoRoute(
-        path: '/${ProfileView.routePath}',
-        builder: (context, state) => const ProfileView(),
-      ),
-    ],
-  );
+        // Fullscreen Image View route
+        GoRoute(
+          path: '/fullscreen',
+          builder: (context, state) {
+            final args = state.extra! as Map<String, dynamic>;
+            return FullscreenImageView(
+              imageUrl: args['imageUrl'] as String,
+              caption: args['caption'] as String?,
+              allowSave: args['allowSave'] as bool,
+              allowShare: args['allowShare'] as bool,
+              loadingColor: args['loadingColor'] as Color,
+            );
+          },
+        ),
+         // Fullscreen Gallery route
+        GoRoute(
+          path: '/gallery',
+          builder: (context, state) {
+            final args = state.extra! as Map<String, dynamic>;
+            return FullscreenGallery(
+              galleryItems: args['galleryItems'] as List<String>,
+              initialIndex: args['initialIndex'] as int,
+            );
+          },
+        ),
+      ],
+    );
 
 /// Provider for router key to force rebuild when needed
 @riverpod
 GlobalKey<NavigatorState> routerKey(Ref ref) => GlobalKey<NavigatorState>();
-
-
 
 class MyNavigatorObserver extends NavigatorObserver {
   @override
@@ -135,5 +161,3 @@ class ErrorView extends StatelessWidget {
         ),
       );
 }
-
-
