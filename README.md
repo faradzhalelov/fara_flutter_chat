@@ -160,7 +160,7 @@ Simple flutter chat app (Supabase && drift)
     - flutter build apk --release --build-name=0.0.1 --build-number=20250301
 
 ### Apk Download
-    - https://drive.google.com/file/d/1ohhcRL7yA08J3WnYP5iVemI6s24Xran1/view?usp=sharing
+    - https://drive.google.com/file/d/1T-BIZFkN4zAnYGUuAf_GyzrEhuBgzhYA/view?usp=sharing
 
 ### Video Preview
-    - https://drive.google.com/file/d/1v8nrXl9igg68IGmQYriP_P95892EE1Jj/view?usp=sharing
+    - 
