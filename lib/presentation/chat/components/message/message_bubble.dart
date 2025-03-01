@@ -1,6 +1,3 @@
-// lib/presentation/chat/components/message_bubble.dart
-import 'dart:io';
-
 import 'package:fara_chat/app/theme/colors.dart';
 import 'package:fara_chat/app/theme/icons.dart';
 import 'package:fara_chat/app/theme/text_styles.dart';
@@ -11,7 +8,7 @@ import 'package:fara_chat/data/database/database.dart';
 import 'package:fara_chat/data/models/message_type.dart';
 import 'package:fara_chat/presentation/chat/components/message/audio_message.dart';
 import 'package:fara_chat/presentation/chat/components/message/file_message.dart';
-import 'package:fara_chat/presentation/chat/components/message/image_message.dart';
+import 'package:fara_chat/presentation/chat/components/message/image/telegram_image.dart';
 import 'package:fara_chat/presentation/chat/components/message/video_message.dart';
 import 'package:flutter/material.dart';
 

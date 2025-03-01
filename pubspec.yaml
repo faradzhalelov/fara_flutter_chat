@@ -52,10 +52,12 @@ dependencies:
 
   #image
   cached_network_image: ^3.4.1
-  
+  palette_generator: ^0.3.3+6
+  photo_view: ^0.15.0
+
   #network
   dio: ^5.8.0+1
-
+  
   #database
   drift: ^2.25.1
   drift_flutter: ^0.2.4

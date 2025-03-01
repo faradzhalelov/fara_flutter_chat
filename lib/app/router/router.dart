@@ -6,6 +6,7 @@ import 'package:fara_chat/app/theme/text_styles.dart';
 import 'package:fara_chat/core/utils/extensions/database_extensions.dart';
 import 'package:fara_chat/presentation/auth/view/login_view.dart';
 import 'package:fara_chat/presentation/auth/view/register_view.dart';
+import 'package:fara_chat/presentation/chat/components/message/image/fullscreen_image.dart';
 import 'package:fara_chat/presentation/chat/view/chat_view.dart';
 import 'package:fara_chat/presentation/chat_list/view/chat_list_view.dart';
 import 'package:fara_chat/presentation/profile/view/profile_view.dart';
@@ -72,7 +73,18 @@ GoRouter appRouter(Ref ref) => GoRouter(
           builder: (context, state) => const ProfileView(),
         ),
 
-        
+          // Fullscreen Image View route
+        GoRoute(
+          path: '/fullscreen',
+          builder: (context, state) {
+            final args = state.extra! as Map<String, dynamic>;
+            return FullScreenImageView(
+              imageUrl: args['imageUrl'] as String,
+              caption: args['caption'] as String?,
+              allowSave: args['allowSave'] as bool,
+            );
+          },
+        ),
       ],
     );
 
