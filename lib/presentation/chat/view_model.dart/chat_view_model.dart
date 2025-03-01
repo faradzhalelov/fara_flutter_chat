@@ -23,7 +23,8 @@ class ChatViewModel extends _$ChatViewModel {
   String? _recordingPath;
 
   @override
-  FutureOr<void> build(String chatId) {
+  FutureOr<void> build(String chatId) async {
+    await SupabaseService().updateUserStatus(isOnline: true);
     _chatRepository = ref.read(chatRepositoryProvider);
     // Clean up resources when the provider is disposed
     ref.onDispose(() {
@@ -36,7 +37,7 @@ class ChatViewModel extends _$ChatViewModel {
     if (text.trim().isEmpty) return;
     state = const AsyncValue.loading();
     try {
-     await _chatRepository.sendMessage(chatId: chatId, content: text.trim());
+      await _chatRepository.sendMessage(chatId: chatId, content: text.trim());
       state = const AsyncValue.data(null);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
@@ -50,10 +51,15 @@ class ChatViewModel extends _$ChatViewModel {
     if (pickedFile == null) return;
     state = const AsyncValue.loading();
     try {
-      final fileUrl = await SupabaseService().uploadFile(pickedFile, MessageType.image,chatId);
+      final fileUrl = await SupabaseService()
+          .uploadFile(pickedFile, MessageType.image, chatId);
       //
       if (fileUrl != null) {
-        await _chatRepository.sendMessage(chatId: chatId, content: '', type: MessageType.image, fileUrl: fileUrl);
+        await _chatRepository.sendMessage(
+            chatId: chatId,
+            content: '',
+            type: MessageType.image,
+            fileUrl: fileUrl);
       }
 
       state = const AsyncValue.data(null);
@@ -74,10 +80,15 @@ class ChatViewModel extends _$ChatViewModel {
     state = const AsyncValue.loading();
 
     try {
-      final fileUrl = await SupabaseService().uploadFile(pickedFile, MessageType.video, chatId);
+      final fileUrl = await SupabaseService()
+          .uploadFile(pickedFile, MessageType.video, chatId);
       //
       if (fileUrl != null) {
-        await _chatRepository.sendMessage(chatId: chatId, content: '', type: MessageType.video, fileUrl: fileUrl);
+        await _chatRepository.sendMessage(
+            chatId: chatId,
+            content: '',
+            type: MessageType.video,
+            fileUrl: fileUrl);
       }
 
       state = const AsyncValue.data(null);
@@ -95,10 +106,15 @@ class ChatViewModel extends _$ChatViewModel {
     state = const AsyncValue.loading();
 
     try {
-       final fileUrl = await SupabaseService().uploadFile(pickedFile, MessageType.file, chatId);
+      final fileUrl = await SupabaseService()
+          .uploadFile(pickedFile, MessageType.file, chatId);
       //
       if (fileUrl != null) {
-        await _chatRepository.sendMessage(chatId: chatId, content: '', type: MessageType.file, fileUrl: fileUrl);
+        await _chatRepository.sendMessage(
+            chatId: chatId,
+            content: '',
+            type: MessageType.file,
+            fileUrl: fileUrl);
       }
       state = const AsyncValue.data(null);
     } catch (e, st) {
@@ -138,10 +154,17 @@ class ChatViewModel extends _$ChatViewModel {
     try {
       await _audioRecorder.stop();
       final pickedFile = XFile(_recordingPath!);
-        final fileUrl = await SupabaseService().uploadFile(pickedFile, MessageType.audio, chatId);
+      log('pickedFile audio: $pickedFile');
+      final fileUrl = await SupabaseService()
+          .uploadFile(pickedFile, MessageType.audio, chatId);
+      log('audio file url:$fileUrl');
       //
       if (fileUrl != null) {
-        await _chatRepository.sendMessage(chatId: chatId, content: '', type: MessageType.audio, fileUrl: fileUrl);
+        await _chatRepository.sendMessage(
+            chatId: chatId,
+            content: '',
+            type: MessageType.audio,
+            fileUrl: fileUrl);
       }
       _recordingPath = null;
       state = const AsyncValue.data(null);
@@ -169,5 +192,4 @@ class ChatViewModel extends _$ChatViewModel {
       rethrow;
     }
   }
-
 }

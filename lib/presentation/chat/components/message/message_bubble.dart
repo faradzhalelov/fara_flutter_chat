@@ -9,6 +9,7 @@ import 'package:fara_chat/core/constants/ui_constants.dart';
 import 'package:fara_chat/core/supabase/supabase_service.dart';
 import 'package:fara_chat/data/database/database.dart';
 import 'package:fara_chat/data/models/message_type.dart';
+import 'package:fara_chat/presentation/chat/components/message/audio_message.dart';
 import 'package:flutter/material.dart';
 
 //todo: message bubbles with custom paint, audio bubble, file bubble
@@ -58,7 +59,7 @@ class MessageBubble extends StatelessWidget {
     final bubbleTheme = AppTheme.messageBubbleTheme;
     final userId = supabase.auth.currentUser?.id;
     final isMe = message.userId == userId;
-    final messageType =MessageType.values.byName(message.type);
+    final messageType = MessageType.values.byName(message.type);
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
@@ -83,48 +84,57 @@ class MessageBubble extends StatelessWidget {
           //mainAxisSize: MainAxisSize.min,
           children: [
             switch (messageType) {
-                MessageType.text => message.content != null && message.content!.isNotEmpty ? 
-                _buildTextWithWidth(
-                message.content ?? ', ',
-                AppTextStyles.small.copyWith(
-                  color: isMe
-                      ? bubbleTheme.myMessageTextColor
-                      : bubbleTheme.otherMessageTextColor,
-                ),
-              ): kNothing,
-                MessageType.image => message.fileUrl != null ? Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.file(
-                    File(message.fileUrl!),
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    errorBuilder: (context, error, stackTrace) => Container(
-                      height: 150,
-                      color: Colors.grey[300],
-                      child: const Center(
-                        child:
-                            Icon(Icons.image_not_supported, color: Colors.grey),
+              MessageType.text =>
+                message.content != null && message.content!.isNotEmpty
+                    ? _buildTextWithWidth(
+                        message.content ?? ', ',
+                        AppTextStyles.small.copyWith(
+                          color: isMe
+                              ? bubbleTheme.myMessageTextColor
+                              : bubbleTheme.otherMessageTextColor,
+                        ),
+                      )
+                    : kNothing,
+              MessageType.image => message.fileUrl != null
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.file(
+                          File(message.fileUrl!),
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          errorBuilder: (context, error, stackTrace) =>
+                              Container(
+                            height: 150,
+                            color: Colors.grey[300],
+                            child: const Center(
+                              child: Icon(Icons.image_not_supported,
+                                  color: Colors.grey),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-              ): kNothing,
-                MessageType.video =>message.fileUrl != null ? Container(
-                  child: Text('video'),
-                ): kNothing,
-                MessageType.file => message.fileUrl != null ?
-                Container(
-                  child: Text('file'),
-                ) : kNothing,
-                MessageType.audio => message.fileUrl != null ?
-                  Container(
-                  child: Text('audio'),
-                )
-                 : kNothing,
-              },
-           
+                    )
+                  : kNothing,
+              MessageType.video => message.fileUrl != null
+                  ? Container(
+                      child: Text('video'),
+                    )
+                  : kNothing,
+              MessageType.file => message.fileUrl != null
+                  ? Container(
+                      child: Text('file'),
+                    )
+                  : kNothing,
+              MessageType.audio => message.fileUrl != null
+                  ? 
+TelegramStyleAudioPlayer(
+  audioUrl: message.fileUrl!,
+)
+                  : kNothing,
+            },
+
             // Time and read status
             ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 50),
@@ -144,8 +154,7 @@ class MessageBubble extends StatelessWidget {
                     if (isMe) ...[
                       const SizedBox(width: 4),
                       Icon(
-                       message.isRead ?? false
-                        ? Icomoon.read : Icomoon.unread,
+                        message.isRead ?? false ? Icomoon.read : Icomoon.unread,
                         size: 14,
                         color: AppColors.darkGreen,
                       ),

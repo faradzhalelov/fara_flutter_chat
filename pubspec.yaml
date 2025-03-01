@@ -39,7 +39,11 @@ dependencies:
 
   #audio
   record: ^5.2.1
-  just_audio: ^0.9.46  
+  just_audio: ^0.9.46 
+  audio_session: ^0.1.25
+
+  #video
+  video_player: ^2.9.3
 
   #database
   drift: ^2.25.1

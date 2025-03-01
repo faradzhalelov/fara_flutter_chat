@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:fara_chat/data/models/message_type.dart';
@@ -7,7 +8,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
-
 
 final supabase = Supabase.instance.client;
 
@@ -26,17 +26,30 @@ class SupabaseService {
     );
   }
 
-    // Upload file
-  Future< String?> uploadFile(
-      XFile xFile, MessageType type, String chatId,) async {
-    final file = File(xFile.path);
+  // Upload file
+  Future<String?> uploadFile(
+    XFile xFile,
+    MessageType type,
+    String chatId,
+  ) async {
+    String? attachmentUrl;
+    
     // Upload to Supabase
-    final attachmentUrl = await uploadFileToSupabase(file, type, chatId);
+    try {
+      final file = File(xFile.path);
+      attachmentUrl = await uploadFileToSupabase(file, type, chatId);
+    } catch (e) {
+      log('uploadFile error:$e');
+      rethrow;
+    }
     return attachmentUrl;
   }
 
-    Future<String?> uploadFileToSupabase(
-      File file, MessageType type, String chatId,) async {
+  Future<String?> uploadFileToSupabase(
+    File file,
+    MessageType type,
+    String chatId,
+  ) async {
     try {
       final String bucketName = type.name;
       final String userId = supabase.auth.currentUser?.id ?? 'anonymous';
@@ -44,7 +57,7 @@ class SupabaseService {
           '${const Uuid().v4()}${path.extension(file.path)}';
       // Include userId in the path to help with RLS policies
       final String filePath = '$userId/$chatId/$fileName';
-
+  
       // Upload to Supabase storage
       await supabase.storage.from(bucketName).upload(
             filePath,
@@ -67,5 +80,19 @@ class SupabaseService {
     }
   }
 
+  Future<void> updateUserStatus({required bool isOnline}) async {
+    try {
+      // Get current authenticated user
+      final user = supabase.auth.currentUser;
 
+      if (user != null) {
+        await supabase.from('users').update({
+          'is_online': isOnline,
+        }).eq('id', user.id);
+      }
+    } catch (e) {
+      // Silently handle errors
+      log('Error updating user status: $e');
+    }
+  }
 }

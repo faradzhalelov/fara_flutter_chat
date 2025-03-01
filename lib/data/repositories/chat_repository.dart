@@ -7,7 +7,6 @@ import 'package:fara_chat/data/models/message_type.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase_flutter;
 
 class ChatRepository {
-
   ChatRepository(this._db);
   final AppDatabase _db;
 
@@ -54,7 +53,7 @@ class ChatRepository {
 
       // Sync messages for each chat
       for (final chat in response) {
-        await syncChatMessages(chat['id'] as  String);
+        await syncChatMessages(chat['id'] as String);
       }
     } catch (e) {
       log('Error syncing chats: $e');
@@ -99,11 +98,13 @@ class ChatRepository {
         value: [userId],
       ),
       callback: (payload) async {
-        if (payload.eventType == supabase_flutter.PostgresChangeEvent.insert || payload.eventType == supabase_flutter.PostgresChangeEvent.update) {
+        if (payload.eventType == supabase_flutter.PostgresChangeEvent.insert ||
+            payload.eventType == supabase_flutter.PostgresChangeEvent.update) {
           final chatData = payload.newRecord;
           await _db.upsertChat(chatData.toChat());
-        } else if (payload.eventType == supabase_flutter.PostgresChangeEvent.update) {
-          final chatId = payload.oldRecord['id'] as  String;
+        } else if (payload.eventType ==
+            supabase_flutter.PostgresChangeEvent.update) {
+          final chatId = payload.oldRecord['id'] as String;
           await _db.deleteChat(chatId);
         }
       },
@@ -142,7 +143,7 @@ class ChatRepository {
     }
   }
 
-    /// Get all messages for the current user from local database
+  /// Get all messages for the current user from local database
   Future<List<Message>> getMessages(String chatId) async {
     try {
       return await _db.getChatMessages(chatId);
@@ -152,9 +153,9 @@ class ChatRepository {
     }
   }
 
-    /// Watch messages for changes (returns a stream)
-  Stream<List<Message>> watchMessages(String chatId) => _db.watchChatMessages(chatId);
-
+  /// Watch messages for changes (returns a stream)
+  Stream<List<Message>> watchMessages(String chatId) =>
+      _db.watchChatMessages(chatId);
 
   /// Watch chats for changes (returns a stream)
   Stream<List<Chat>> watchChats() => _db.watchAllChats();
@@ -187,13 +188,15 @@ class ChatRepository {
 
       // Convert to User models
       final users = response
-          .map<User>((userData) => User(
-                id: userData['id'] as String,
-                email: userData['email'] as String ,
-                username: userData['username'] as String,
-                avatarUrl: userData['avatar_url'] as String?,
-                isOnline: userData['is_online'] as bool? ?? false,
-              ),)
+          .map<User>(
+            (userData) => User(
+              id: userData['id'] as String,
+              email: userData['email'] as String,
+              username: userData['username'] as String,
+              avatarUrl: userData['avatar_url'] as String?,
+              isOnline: userData['is_online'] as bool? ?? false,
+            ),
+          )
           .toList();
 
       // Also save to local database
@@ -284,7 +287,7 @@ class ChatRepository {
 
     try {
       // Create message in Supabase
-      final response = await supabase
+      final responseMessage = await supabase
           .from('messages')
           .insert({
             'chat_id': chatId,
@@ -295,9 +298,10 @@ class ChatRepository {
           })
           .select()
           .single();
-
+      final responseChat =await supabase.from('chats').select().eq('id', chatId).single();
       // Update local DB
-      await _db.upsertMessage(response.toMessage());
+      await _db.upsertMessage(responseMessage.toMessage());
+      await _db.upsertChat(responseChat.toChat());
     } catch (e) {
       log('Error sending message: $e');
       throw Exception('Failed to send message: $e');
@@ -311,5 +315,4 @@ class ChatRepository {
     }
     _subscriptions.clear();
   }
-  
 }

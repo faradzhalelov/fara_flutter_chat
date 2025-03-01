@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'package:fara_chat/core/supabase/supabase_service.dart';
 import 'package:fara_chat/data/database/database.dart';
 import 'package:fara_chat/data/repositories/chat_repository.dart';
 import 'package:fara_chat/providers/chats/chats_provider.dart';
@@ -15,8 +16,8 @@ class ChatListViewModel extends _$ChatListViewModel {
 
   @override
   Future<List<(Chat, User)>> build() async {
+    await SupabaseService().updateUserStatus(isOnline: true);
     _chatRepository = ref.read(chatRepositoryProvider);
-
     // Initial load
     final chatsList = await _loadChats();
 
@@ -73,6 +74,7 @@ class ChatListViewModel extends _$ChatListViewModel {
       final bool isDifferent = lastChats == null ||
           lastChats!.length != chats.length ||
           !_areChatsEqual(lastChats!, chats);
+      log('isDifferent chats: $isDifferent');
 
       if (!isDifferent) {
         log('Skipping duplicate chat update');
@@ -102,8 +104,14 @@ class ChatListViewModel extends _$ChatListViewModel {
 
     // Simple comparison using IDs and lastMessageAt
     for (int i = 0; i < list1.length; i++) {
-      if (list1[i].id != list2[i].id ||
-          list1[i].lastMessageAt != list2[i].lastMessageAt) {
+      if (list1[i].id != list2[i].id) {
+        return true;
+      }
+      final lastMessageAt1 = list1[i].lastMessageAt;
+      final lastMessageAt2 = list2[i].lastMessageAt;
+      if (lastMessageAt1 != null &&
+          lastMessageAt2 != null &&
+          lastMessageAt1.compareTo(lastMessageAt2) != 0) {
         return true;
       }
     }
