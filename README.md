@@ -150,7 +150,7 @@ Simple flutter chat app (Supabase && drift)
 
 
 ### How it works:
-    - auth with firebase(login, register), add user to users table
+    - auth with supabase(login, register), add user to users table
     - chat list. sync chats from supabase, add to local db, listen to updates
     - chat messages. sync messages from supabase, add to local db, listen to messages
     - profile: user profile.
